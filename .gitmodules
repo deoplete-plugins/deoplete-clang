@@ -1,0 +1,3 @@
+[submodule "rplugin/python3/deoplete/clang"]
+	path = rplugin/python3/deoplete/clang
+	url = https://github.com/zchee/clang-python3.git
