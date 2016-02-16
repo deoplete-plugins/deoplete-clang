@@ -38,7 +38,7 @@ class Source(Base):
             self.vim.vars['deoplete#sources#clang#clang_header']
 
         if self.vim.vars['deoplete#debug']:
-            logfile = self.vim.vars['deoplete#sources#clang#debug_file']
+            logfile = self.vim.vars['deoplete#sources#clang#debug_log']
             self.log(logfile)
 
     # @timeit(fmt='simple', threshold=[0.00003000, 0.00015000])
