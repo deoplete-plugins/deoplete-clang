@@ -1,5 +1,5 @@
+import os
 import sys
-import clang.cindex
 
 from .base import Base
 
@@ -17,6 +17,7 @@ except ImportError:
     import neovim
     neovim.Nvim.command("echoerr 'cant find clang-python3 module'")
 
+
 class Source(Base):
 
     def __init__(self, vim):
@@ -25,8 +26,18 @@ class Source(Base):
         self.name = 'clang'
         self.mark = '[clang]'
         self.filetypes = ['c', 'cpp', 'objc', 'objcpp']
-        self.input_pattern = r''
+        # TODO(zchee): not need "r'[a-zA-Z_]\w*::\w*'" in C
+        self.input_pattern = (r'[^. \t0-9]\.\w*|'
+                              r'[^. \t0-9]->\w*|'
+                              r'[a-zA-Z_]\w*::\w*')
         self.rank = 500
+
+        # Load libclang shared library
+        library_path = self.vim.vars['deoplete#sources#clang#libclang_path']
+        clang.Config.set_library_path(library_path)
+        clang.Config.set_compatibility_check(False)
+        self.clang_header = self.vim.vars[
+            'deoplete#sources#clang#clang_header']
 
     def get_complete_position(self, context):
         return -1
