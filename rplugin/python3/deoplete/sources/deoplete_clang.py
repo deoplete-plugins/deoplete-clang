@@ -4,15 +4,14 @@ import sys
 
 from deoplete.sources.base import Base
 
-# load_external_module('clang')
 current_dir = os.path.dirname(os.path.abspath(__file__))
-module_dir = os.path.join(os.path.dirname(current_dir), 'clang')
-sys.path.insert(0, module_dir)
-import clang.cindex as clang
-
 sys.path.insert(0, current_dir)
-from helper import get_var
 from clang_data import ClangData
+from helper import get_var
+from helper import load_external_module
+
+load_external_module('clang')
+import clang.cindex as cl
 
 from logging import getLogger
 logger = getLogger(__name__)
@@ -44,8 +43,8 @@ class Source(Base):
         self.clang_header = \
             get_var(self.vim, 'deoplete#sources#clang#clang_header')
 
-        clang.Config.set_library_path(self.library_path)
-        clang.Config.set_compatibility_check(False)
+        cl.Config.set_library_path(self.library_path)
+        cl.Config.set_compatibility_check(False)
 
         if get_vars(self.vim, 'deoplete#debug'):
             logfile = get_var(self.vim, 'deoplete#sources#clang#debug#log')
@@ -61,7 +60,7 @@ class Source(Base):
     def gather_candidates(self, context):
         line, col = self.vim.current.window.cursor
         f = self.vim.current.buffer.name
-        index = clang.Index.create()
+        index = cl.Index.create()
         translation_unit = index.parse(f, ['-x', 'c++', '-std=c++11'])
 
         complete = translation_unit.codeComplete(f, line, col)
