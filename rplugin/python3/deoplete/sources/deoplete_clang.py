@@ -73,7 +73,7 @@ class Source(Base):
             chunk_spelling = chunk.spelling
 
             if chunk.isKindInformative() or chunk.isKindComma() or \
-                    chunk_spelling is None or chunk.isKindPlaceHolder():
+                    chunk.isKindPlaceHolder() or chunk_spelling is None:
                 continue
 
             elif chunk.isKindResultType():
