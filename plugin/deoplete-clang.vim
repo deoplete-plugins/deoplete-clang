@@ -10,7 +10,3 @@ endif
 if !exists("g:deoplete#sources#clang#clang_header")
   let g:deoplete#sources#clang#clang_header = get(g:, 'deoplete#sources#clang#clang_header', '')
 endif
-
-if !exists("g:deoplete#sources#clang#debug_log")
-  let g:deoplete#sources#clang#debug_log = get(g:, 'deoplete#sources#clang#debug_log', '')
-endif
