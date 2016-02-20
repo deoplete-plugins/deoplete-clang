@@ -2,18 +2,25 @@ import os
 import re
 import sys
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
-from helper import load_external_module
-from profiler import timeit
-
 from deoplete.sources.base import Base
 
-load_external_module('clang')
+# load_external_module('clang')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+module_dir = os.path.join(os.path.dirname(current_dir), 'clang')
+sys.path.insert(0, module_dir)
 import clang.cindex as clang
+
+sys.path.insert(0, current_dir)
+from clang_data import ClangData
 
 from logging import getLogger
 logger = getLogger(__name__)
+
+# Profiler
+from profiler import timeit
+# PyVmMonitor_dir = '/Applications/PyVmMonitor.app/Contents/MacOS/public_api'
+# sys.path.append(PyVmMonitor_dir)
+# import pyvmmonitor
 
 
 class Source(Base):
@@ -38,7 +45,8 @@ class Source(Base):
             self.vim.vars['deoplete#sources#clang#clang_header']
 
         if self.vim.vars['deoplete#debug']:
-            logfile = self.vim.vars['deoplete#sources#clang#debug_log']
+            logfile = os.path.expanduser(
+                    self.vim.vars['deoplete#sources#clang#debug_log'])
             self.log(logfile)
 
     # @timeit(fmt='simple', threshold=[0.00003000, 0.00015000])
@@ -46,7 +54,8 @@ class Source(Base):
         m = re.search(r'\w*$', context['input'])
         return m.start() if m else -1
 
-    @timeit(fmt='simple', threshold=[0.1, 0.2], logger=logger)
+    # @pyvmmonitor.profile_method()
+    @timeit(fmt='simple', threshold=[0.10000000, 0.30000000], logger=logger)
     def gather_candidates(self, context):
         line, col = self.vim.current.window.cursor
         f = self.vim.current.buffer.name
