@@ -37,7 +37,6 @@ class Source(Base):
                               r'[a-zA-Z_]\w*::\w*')
         self.rank = 500
 
-        # Load libclang shared library
         self.library_path = \
             get_var(self.vim, 'deoplete#sources#clang#libclang_path')
         self.clang_header = \
@@ -65,8 +64,6 @@ class Source(Base):
 
         complete = translation_unit.codeComplete(f, line, col)
         result = list(map(self.parse_candidates, complete.results))
-        # logger.debug('\n'.join('{}: {}'.format(*k)
-        #                        for k in enumerate(list(complete.results))))
 
         return result
 
