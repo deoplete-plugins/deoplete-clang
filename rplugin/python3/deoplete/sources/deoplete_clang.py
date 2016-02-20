@@ -89,7 +89,7 @@ class Source(Base):
         completion['word'] = word
         completion['abbr'] = abbr
         completion['info'] = info
-        completion['dup'] = 0
+        completion['dup'] = 1
 
         if result.cursorKind in ClangData.kinds:
             completion['kind'] = ' '.join(
