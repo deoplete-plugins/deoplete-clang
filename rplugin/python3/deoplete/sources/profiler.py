@@ -8,7 +8,7 @@ class Colors(object):
     ENDC = '\033[0m'
 
 
-def timeit(fmt, threshold, logger):
+def timeit(logger, fmt, threshold):
     from json import dumps
     import time
 
@@ -22,13 +22,15 @@ def timeit(fmt, threshold, logger):
 
     def timereald(method):
         def timed(*args, **kw):
-
             start = time.clock()
             result = method(*args, **kw)
             end = time.clock()
 
-            obj, value = args
-            data = is_json(value) if False else value
+            try:
+                obj, value = args
+                data = is_json(value) if False else value
+            except Exception:
+                data = is_json(args) if False else args
 
             sec = (end - start)
             sec_color = Colors.RED
@@ -38,7 +40,7 @@ def timeit(fmt, threshold, logger):
                 sec_color = Colors.GREEN
 
             if fmt == 'simple':
-                logger.debug("\nName: %r\nClock: %s%2.8f%s sec" %
+                logger.debug("\nName: %r\nClock: %s%2.8f%s sec\n" %
                              (method.__name__,
                               sec_color,
                               sec,
@@ -46,7 +48,7 @@ def timeit(fmt, threshold, logger):
                               ))
             elif fmt == 'verbose':
                 logger.debug(
-                    "\nName: %r\nClock: %s%2.8f%s sec\nObj: %s\nkw: %s\n%s" %
+                    "\nName: %r\nClock: %s%2.8f%s sec\nObj: %s\nkw: %s\n%s\n" %
                     (method.__name__,
                      sec_color,
                      sec,
