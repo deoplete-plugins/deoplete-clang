@@ -1,4 +1,4 @@
-class bcolors:
+class Colors(object):
     RED = '\033[1;41m'
     GREEN = '\033[1;42m'
     YELLOW = '\033[1;43m'
@@ -11,7 +11,6 @@ class bcolors:
 def timeit(fmt, threshold, logger):
     from json import dumps
     import time
-    import os.path
 
     def is_json(json_data):
         try:
@@ -32,38 +31,61 @@ def timeit(fmt, threshold, logger):
             data = is_json(value) if False else value
 
             sec = (end - start)
-            sec_color = bcolors.RED
+            sec_color = Colors.RED
             if sec <= threshold[0]:
-                sec_color = bcolors.BLUE
+                sec_color = Colors.BLUE
             elif sec <= threshold[1]:
-                sec_color = bcolors.GREEN
+                sec_color = Colors.GREEN
 
             if fmt == 'simple':
                 logger.debug("\nName: %r\nClock: %s%2.8f%s sec" %
                              (method.__name__,
                               sec_color,
                               sec,
-                              bcolors.ENDC,
+                              Colors.ENDC,
                               ))
-            else:
-                logger.debug("\nName: %r\nClock: %s%2.8f%s sec\nObj: %s\nkw: %s\n%s" %
-                             (method.__name__,
-                              sec_color,
-                              sec,
-                              bcolors.ENDC,
-                              obj,
-                              kw,
-                              data,
-                              ))
+            elif fmt == 'verbose':
+                logger.debug(
+                    "\nName: %r\nClock: %s%2.8f%s sec\nObj: %s\nkw: %s\n%s" %
+                    (method.__name__,
+                     sec_color,
+                     sec,
+                     Colors.ENDC,
+                     obj,
+                     kw,
+                     data,
+                     ))
             return result
         return timed
     return timereald
 
 
+def cprofiler(logger, path):
+    import cProfile
+    import pstats
+
+    def _rf(function):
+        def _f(*args, **kwargs):
+            pr = cProfile.Profile()
+            # pr.enable()
+            logger.debug("\n<<<---")
+            res = function(*args, **kwargs)
+            # pr.disable()
+            # p = pstats.Stats(pr)
+            # pr.runctx(gather_candidates(), {}, {})
+            p = pstats.Stats(pr)
+            logger.debug(p.strip_dirs().sort_stats('cumtime').print_stats(25))
+            # p.dump_stats(path)
+            logger.debug("\n--->>>")
+            return res
+        return _f
+    return _rf
+
+
 def profile(sort='cumulative', lines=50, strip_dirs=False):
     import cProfile
-    import tempfile
     import pstats
+    import tempfile
 
     def outer(fun):
         def inner(*args, **kwargs):
@@ -71,10 +93,9 @@ def profile(sort='cumulative', lines=50, strip_dirs=False):
             prof = cProfile.Profile()
             try:
                 ret = prof.runcall(fun, *args, **kwargs)
-            except:
+            except Exception:
                 file.close()
                 raise
-
             prof.dump_stats(file.name)
             stats = pstats.Stats(file.name)
             if strip_dirs:
@@ -88,64 +109,9 @@ def profile(sort='cumulative', lines=50, strip_dirs=False):
             file.close()
             return ret
         return inner
-
     # in case this is defined as "@profile" instead of "@profile()"
     if hasattr(sort, '__call__'):
         fun = sort
         sort = 'cumulative'
         outer = outer(fun)
     return outer
-
-# fp=open(os.path.expanduser('~/.log/nvim/python/deoplete-clang.log'), 'w+')
-# @profile(stream=fp)
-# @cProfiler(gather_candidates)
-# @timecall(immediate=True)
-# @profile(filename=os.path.expanduser('~/.log/nvim/python/deoplete-clang.log'), immediate=False, stdout=False)
-# @profile_this
-
-def cProfiler():
-    import cProfile
-    import pstats
-
-    def _f(*args, **kwargs):
-        pr = cProfile.Profile()
-        pr.enable()
-        logger.debug("\n<<<---")
-        # res = func(*args, **kwargs)
-        p = pstats.Stats.dump_stats(self, os.path.expanduser(
-            '~/.log/nvim/python/deoplete-clang.log'))
-        logger.debug(p.strip_dirs().sort_stats('cumtime').print_stats(20))
-        logger.debug("\n--->>>")
-        logger.debug(str(_f))
-        # return res
-    return _f
-
-
-def profile(func):
-    def _f(*args, **kwargs):
-        pr = cProfile.Profile()
-        pr.enable()
-        print("\n<<<---")
-        res = func(*args, **kwargs)
-        p = pstats.Stats(pr)
-        p.strip_dirs().sort_stats('cumtime').print_stats(20)
-        print("\n--->>>")
-        return res
-    return _f
-
-
-def profile_this(fn):
-    import cProfile
-    import pstats
-
-    def profiled_fn(*args, **kwargs):
-        # name for profile dump
-        fpath = os.path.expanduser('~/.log/nvim/python/deoplete-clang.log')
-        prof = cProfile.Profile()
-        logger.debug("\n<<<---")
-        ret = prof.runcall(fn, *args, **kwargs)
-        p = pstats.Stats(prof)
-        logger.debug(str(p.print_stats(20)))
-        logger.debug("\n--->>>")
-        return ret
-    return profiled_fn
