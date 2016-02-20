@@ -31,11 +31,11 @@ class Source(Base):
         self.name = 'clang'
         self.mark = '[clang]'
         self.filetypes = ['c', 'cpp', 'objc', 'objcpp']
-        # TODO(zchee): not need "r'[a-zA-Z_]\w*::\w*'" in C
+        self.rank = 500
+        # TODO(zchee): not need "r'[a-zA-Z_]\w*::\w*'" in C language
         self.input_pattern = (r'[^. \t0-9]\.\w*|'
                               r'[^. \t0-9]->\w*|'
                               r'[a-zA-Z_]\w*::\w*')
-        self.rank = 500
 
         self.library_path = \
             get_var(self.vim, 'deoplete#sources#clang#libclang_path')
@@ -45,7 +45,7 @@ class Source(Base):
         cl.Config.set_library_path(self.library_path)
         cl.Config.set_compatibility_check(False)
 
-        if get_vars(self.vim, 'deoplete#debug'):
+        if get_var(self.vim, 'deoplete#debug'):
             logfile = get_var(self.vim, 'deoplete#sources#clang#debug#log')
             self.set_debug(os.path.expanduser(logfile))
 
