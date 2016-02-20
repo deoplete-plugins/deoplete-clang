@@ -11,6 +11,7 @@ sys.path.insert(0, module_dir)
 import clang.cindex as clang
 
 sys.path.insert(0, current_dir)
+from helper import get_var
 from clang_data import ClangData
 
 from logging import getLogger
@@ -38,16 +39,17 @@ class Source(Base):
         self.rank = 500
 
         # Load libclang shared library
-        library_path = self.vim.vars['deoplete#sources#clang#libclang_path']
-        clang.Config.set_library_path(library_path)
-        clang.Config.set_compatibility_check(False)
+        self.library_path = \
+            get_var(self.vim, 'deoplete#sources#clang#libclang_path')
         self.clang_header = \
-            self.vim.vars['deoplete#sources#clang#clang_header']
+            get_var(self.vim, 'deoplete#sources#clang#clang_header')
 
-        if self.vim.vars['deoplete#debug']:
-            logfile = os.path.expanduser(
-                    self.vim.vars['deoplete#sources#clang#debug_log'])
-            self.log(logfile)
+        clang.Config.set_library_path(self.library_path)
+        clang.Config.set_compatibility_check(False)
+
+        if get_vars(self.vim, 'deoplete#debug'):
+            logfile = get_var(self.vim, 'deoplete#sources#clang#debug#log')
+            self.set_debug(os.path.expanduser(logfile))
 
     # @timeit(fmt='simple', threshold=[0.00003000, 0.00015000])
     def get_complete_position(self, context):
@@ -109,7 +111,7 @@ class Source(Base):
 
         return completion
 
-    def log(self, path):
+    def set_debug(self, path):
         from logging import FileHandler, Formatter, DEBUG
         hdlr = FileHandler(os.path.expanduser(path))
         logger.addHandler(hdlr)

@@ -8,3 +8,9 @@ def load_external_module(module):
     current = dirname(abspath(__file__))
     module_dir = join(dirname(current), module)
     sys.path.insert(0, module_dir)
+
+def get_var(vim, variable):
+    try:
+        return vim.vars[variable]
+    except Exception:
+        return None
