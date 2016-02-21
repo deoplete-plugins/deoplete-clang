@@ -217,7 +217,6 @@ class Source(Base):
         _type = ""
         word = ""
         abbr = ""
-        kind = ""
         info = ""
 
         for chunk in result.string:
@@ -247,9 +246,9 @@ class Source(Base):
 
         if result.cursorKind in ClangData.kinds:
             completion['kind'] = ' '.join(
-                [ClangData.kinds[result.cursorKind], _type, kind])
+                [ClangData.kinds[result.cursorKind], _type])
         else:
             completion['kind'] = ' '.join(
-                [str(result.cursorKind), _type, kind])
+                [str(result.cursorKind), _type])
 
         return completion
