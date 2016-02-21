@@ -129,20 +129,17 @@ class Source(Base):
             params = self.get_compilation_database(os.path.abspath(fname))
 
         args = params['args']
-        headers = os.listdir(self.clang_header)
-        directory = self.clang_header
-        for path in headers:
-            try:
-                # files = os.listdir(path)
-                # if len(files) >= 1:
-                #     files = sorted(files)
-                #     subDir = files[-1]
-                # else:
-                #     subDir = '.'
-                # path = path + "/" + subDir + "/include/"
-                args.append('-I' + directory + path)
-            except Exception:
-                pass
+
+        versions = os.listdir(self.clang_header)
+        sorted(versions)
+        version = versions[-1]
+
+        headers = os.path.join(self.clang_header, version, 'include')
+        try:
+            for path in os.listdir(headers):
+                args.append('-I' + os.path.join(self.clang_header + version + path))
+        except Exception:
+            pass
 
         out = {'args': args, 'cwd': params['cwd']}
         self.params[fname] = out
@@ -158,7 +155,7 @@ class Source(Base):
             if cmds != None:
                 cwd = cmds[0].directory
                 args = []
-                skip = 1  # Skip compiler invocation
+                skip = 1
                 for arg in cmds[0].arguments:
                     if skip:
                         skip = 0
@@ -179,12 +176,12 @@ class Source(Base):
                         args.append('-I' + include_path)
                         continue
                     args.append(arg)
-                # logger.debug(args)
                 query = {'args': args, 'cwd': cwd}
 
         directory = fname.rsplit('/', 1)
         args.append('-I' + directory[0])
         args.append('-I' + os.path.join(directory[0], 'include'))
+        # logger.debug(args)
 
         out = {'args': list(query['args']), 'cwd': query['cwd']}
         self.database[fname] = out
