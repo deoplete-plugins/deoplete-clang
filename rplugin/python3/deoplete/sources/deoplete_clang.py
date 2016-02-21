@@ -45,6 +45,9 @@ class Source(Base):
                 get_var(self.vim, 'deoplete#sources#clang#clang_header'))
         self.completion_flags = \
             get_var(self.vim, "deoplete#sources#clang#flags")
+        self.sort_algo = \
+            get_var(self.vim, "deoplete#sources#clang#sort_algo")
+        
 
         cl.Config.set_library_file(str(self.library_path))
         cl.Config.set_compatibility_check(False)
@@ -85,17 +88,31 @@ class Source(Base):
                 buf.name, line, col,
                 self.get_current_buffer(buf),
                 args['args'])
-
-        try:
-            # TODO(zchee): Profiling
-            # return [x for x in map(self.parse_candidates, complete.results)]
-            return list(map(self.parse_candidates, complete.results))
-        except Exception:
+        if complete is None:
             return []
+
+        if self.sort_algo == 'priority':
+            getPriority = lambda x: x.string.priority
+            results = sorted(complete.results, key=getPriority)
+        elif self.sort_algo == 'alphabetical':
+            getAbbrevation = lambda x: self.get_abbr(x.string).lower()
+            results = sorted(complete.results, key=getAbbrevation)
+        else:
+            results = complete.results
+
+        # TODO(zchee): Profiling
+        # return [x for x in map(self.parse_candidates, results)]
+        return list(map(self.parse_candidates, results))
 
     # @timeit(logger, 'simple', [0.20000000, 0.30000000])
     def get_current_buffer(self, b):
         return [(b.name, "\n".join(b[:]) + "\n")]
+
+    def get_abbr(self, strings):
+        for chunks in strings:
+            if chunks.isKindTypedText():
+                return chunks.spelling
+        return ""
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_params(self, fname):
