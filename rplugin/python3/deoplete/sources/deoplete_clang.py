@@ -39,7 +39,7 @@ class Source(Base):
                               r'[a-zA-Z_]\w*::\w*')
 
         self.library_path = \
-            get_var(self.vim, 'deoplete#sources#clang#libclang_path')
+            str(get_var(self.vim, 'deoplete#sources#clang#libclang_path'))
         self.clang_header = \
             os.path.abspath(
                 get_var(self.vim, 'deoplete#sources#clang#clang_header'))
@@ -54,7 +54,7 @@ class Source(Base):
 
         clang_complete_database = \
             get_var(self.vim, 'deoplete#sources#clang#clang_complete_database')
-        if clang_complete_database != None:
+        if clang_complete_database != '':
             self.compilation_database = \
                 cl.CompilationDatabase.fromDirectory(clang_complete_database)
         else:
@@ -81,7 +81,11 @@ class Source(Base):
         line = self.vim.eval("line('.')")
         col = (context['complete_position'] + 1)
         buf = self.vim.current.buffer
-        args = self.get_params(buf.name)
+        try:
+            args = self.get_params(buf.name)
+        except Exception:
+            args = dict().fromkeys(['args', 'cwd'], [])
+            args['args'] = self.completion_flags
 
         complete = \
             self.get_completion(
