@@ -152,12 +152,12 @@ class Source(Base):
 
         # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
-            cmds = self.compilation_database.getCompileCommands(fname)
+            cmds = self.compilation_database.getCompileCommands(fname)[0]
             if cmds != None:
-                cwd = cmds[0].directory
+                cwd = cmds.directory
                 args = []
                 skip = 1
-                for arg in cmds[0].arguments:
+                for arg in cmds.arguments:
                     if skip or arg in \
                             ['-c', fname,
                              os.path.realpath(os.path.join(cwd, arg))]:
