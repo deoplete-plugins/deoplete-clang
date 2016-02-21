@@ -225,7 +225,7 @@ class Source(Base):
 
     def set_debug(self, path):
         from logging import FileHandler, Formatter, DEBUG
-        hdlr = FileHandler(os.path.expanduser(path))
+        hdlr = FileHandler(path)
         logger.addHandler(hdlr)
         datefmt = '%Y/%m/%d %H:%M:%S'
         fmt = Formatter(
