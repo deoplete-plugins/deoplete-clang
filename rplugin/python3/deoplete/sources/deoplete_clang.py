@@ -136,11 +136,8 @@ class Source(Base):
         version = versions[-1]
 
         headers = os.path.join(self.clang_header, version, 'include')
-        try:
-            for path in os.listdir(headers):
-                args.append('-I' + os.path.join(self.clang_header + version + path))
-        except Exception:
-            pass
+        for path in os.listdir(headers):
+            args.append('-I' + os.path.join(self.clang_header + version + path))
 
         self.params[fname] = {'args': args}
         return {'args': args}
