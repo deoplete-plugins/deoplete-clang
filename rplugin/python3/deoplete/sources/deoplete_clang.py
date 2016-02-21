@@ -142,9 +142,8 @@ class Source(Base):
         except Exception:
             pass
 
-        out = {'args': args}
-        self.params[fname] = out
-        return out
+        self.params[fname] = {'args': args}
+        return {'args': args}
 
     # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compilation_database(self, fname):
@@ -181,9 +180,8 @@ class Source(Base):
         args.append('-I' + os.path.join(directory[0], 'include'))
         # logger.debug(args)
 
-        out = {'args': args}
-        self.database[fname] = out
-        return out
+        self.database[fname] = {'args': args}
+        return {'args': args}
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_translation_unit(self, fname, args, buf_data):
