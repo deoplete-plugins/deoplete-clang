@@ -53,7 +53,7 @@ class Source(Base):
         else:
             self.compilation_database = None
 
-        cl.Config.set_library_path(self.library_path)
+        cl.Config.set_library_file(str(self.library_path))
         cl.Config.set_compatibility_check(False)
 
         self.index = cl.Index.create()
