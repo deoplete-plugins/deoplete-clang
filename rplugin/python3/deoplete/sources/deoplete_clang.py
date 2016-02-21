@@ -191,10 +191,17 @@ class Source(Base):
         # PARSE_SKIP_FUNCTION_BODIES = 64
         # PARSE_INCLUDE_BRIEF_COMMENTS_IN_CODE_COMPLETION = 128
         flags = 15
-        tu = self.index.parse(fname, args, buf_data, flags)
+
+        ast_file = fname + ".tu"
+        if os.path.exists(ast_file):
+            tu = self.index.read(ast_file)
+        else:
+            tu = self.index.parse(fname, args, buf, flags)
+            tu.save(ast_file)
+        tu.reparse(buf)
+        os.remove(ast_file)
 
         self.tu_data[fname] = tu
-        tu.reparse(buf_data)
 
         return tu
 
