@@ -181,7 +181,7 @@ class Source(Base):
         return {'args': args}
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
-    def get_translation_unit(self, fname, args, buf_data):
+    def get_translation_unit(self, fname, args, buf):
         # cl.TranslationUnit
         # PARSE_NONE = 0
         # PARSE_DETAILED_PROCESSING_RECORD = 1
@@ -206,13 +206,13 @@ class Source(Base):
         return tu
 
     # @timeit(logger, 'simple', [0.01500000, 0.02500000])
-    def get_completion(self, fname, line, column, buf_data, args):
+    def get_completion(self, fname, line, column, buf, args):
         if self.tu_data.get(fname) != None:
             tu = self.tu_data.get(fname)
         else:
-            tu = self.get_translation_unit(fname, args, buf_data)
+            tu = self.get_translation_unit(fname, args, buf)
 
-        return tu.codeComplete(fname, line, column, buf_data,
+        return tu.codeComplete(fname, line, column, buf,
                                include_macros=False,
                                include_code_patterns=False,
                                include_brief_comments=False)
