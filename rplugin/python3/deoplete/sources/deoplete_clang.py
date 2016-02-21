@@ -59,7 +59,7 @@ class Source(Base):
         self.index = cl.Index.create()
         self.tu_data = dict()
 
-        if get_var(self.vim, 'deoplete#debug'):
+        if get_var(self.vim, 'deoplete#enable_debug'):
             log_file = get_var(self.vim, 'deoplete#sources#clang#debug#log_file')
             self.set_debug(os.path.expanduser(log_file))
 
