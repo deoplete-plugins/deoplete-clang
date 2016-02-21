@@ -80,9 +80,9 @@ class Source(Base):
         line = self.vim.eval("line('.')")
         col = (context['complete_position'] + 1)
         buf = self.vim.current.buffer
-        try:
+        if self.compilation_database:
             args = self.get_params(buf.name)
-        except Exception:
+        else:
             args = dict().fromkeys(['args'], [])
             args['args'] = self.completion_flags
 
@@ -129,7 +129,7 @@ class Source(Base):
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
 
-        args = params
+        args = [params]
 
         versions = os.listdir(self.clang_header)
         sorted(versions)
