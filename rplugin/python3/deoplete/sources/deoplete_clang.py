@@ -83,8 +83,7 @@ class Source(Base):
         if self.compilation_database:
             args = self.get_params(buf.name)
         else:
-            args = dict().fromkeys(['args'], [])
-            args['args'] = self.completion_flags
+            args = dict().fromkeys(['args'], self.completion_flags)
 
         complete = \
             self.get_completion(
