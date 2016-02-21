@@ -243,9 +243,12 @@ class Source(Base):
 
             elif chunk.isKindTypedText():
                 abbr += chunk_spelling
-
-            word += chunk_spelling
-            info += chunk_spelling
+                word += chunk_spelling
+                info += chunk_spelling
+                continue
+            else:
+                word += chunk_spelling
+                info += chunk_spelling
 
         completion['word'] = word
         completion['abbr'] = abbr
