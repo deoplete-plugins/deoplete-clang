@@ -39,7 +39,7 @@ class Source(Base):
                               r'[a-zA-Z_]\w*::\w*')
 
         self.library_path = \
-            str(get_var(self.vim, 'deoplete#sources#clang#libclang_path'))
+            get_var(self.vim, 'deoplete#sources#clang#libclang_path')
         self.clang_header = \
             os.path.abspath(
                 get_var(self.vim, 'deoplete#sources#clang#clang_header'))
