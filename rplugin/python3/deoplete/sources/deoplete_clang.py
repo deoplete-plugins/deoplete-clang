@@ -158,9 +158,6 @@ class Source(Base):
                 args = []
                 skip = 1
                 for arg in cmds[0].arguments:
-                    if skip:
-                        skip = 0
-                        continue
                     if skip or arg in \
                             ['-c', fname,
                              os.path.realpath(os.path.join(cwd, arg))]:
