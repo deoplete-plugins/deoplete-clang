@@ -9,6 +9,7 @@ sys.path.insert(0, current_dir)
 from clang_data import ClangData
 from helper import get_var
 from helper import load_external_module
+from helper import set_debug
 
 load_external_module('clang')
 import clang.cindex as cl
@@ -67,7 +68,7 @@ class Source(Base):
         if get_var(self.vim, 'deoplete#enable_debug'):
             log_file = get_var(
                 self.vim, 'deoplete#sources#clang#debug#log_file')
-            self.set_debug(os.path.expanduser(log_file))
+            set_debug(logger, os.path.expanduser(log_file))
 
     # @timeit(logger, 'simple', [0.00003000, 0.00015000])
     def get_complete_position(self, context):
@@ -253,13 +254,3 @@ class Source(Base):
                 [str(result.cursorKind), _type, kind])
 
         return completion
-
-    def set_debug(self, path):
-        from logging import FileHandler, Formatter, DEBUG
-        hdlr = FileHandler(path)
-        logger.addHandler(hdlr)
-        datefmt = '%Y/%m/%d %H:%M:%S'
-        fmt = Formatter(
-            "%(levelname)s %(asctime)s %(message)s", datefmt=datefmt)
-        hdlr.setFormatter(fmt)
-        logger.setLevel(DEBUG)
