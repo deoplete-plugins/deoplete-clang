@@ -41,26 +41,30 @@ class Source(Base):
         self.library_path = \
             get_var(self.vim, 'deoplete#sources#clang#libclang_path')
         self.clang_header = \
-            os.path.abspath(get_var(self.vim, 'deoplete#sources#clang#clang_header'))
+            os.path.abspath(
+                get_var(self.vim, 'deoplete#sources#clang#clang_header'))
         self.completion_flags = \
             get_var(self.vim, "deoplete#sources#clang#flags")
-
-        clang_complete_database = \
-            get_var(self.vim, 'deoplete#sources#clang#clang_complete_database')
-        if clang_complete_database != None:
-            self.compilation_database = cl.CompilationDatabase.fromDirectory(
-                    clang_complete_database)
-        else:
-            self.compilation_database = None
 
         cl.Config.set_library_file(str(self.library_path))
         cl.Config.set_compatibility_check(False)
 
-        self.index = cl.Index.create()
-        self.tu_data = dict()
+        clang_complete_database = \
+            get_var(self.vim, 'deoplete#sources#clang#clang_complete_database')
+        if clang_complete_database != None:
+            self.compilation_database = \
+                cl.CompilationDatabase.fromDirectory(clang_complete_database)
+        else:
+            self.compilation_database = None
 
+        self.index = cl.Index.create()
+        # TODO(zchee): More elegant way
+        self.tu_data, self.params, self.database = dict(), dict(), dict()
+
+        # debug
         if get_var(self.vim, 'deoplete#enable_debug'):
-            log_file = get_var(self.vim, 'deoplete#sources#clang#debug#log_file')
+            log_file = get_var(
+                self.vim, 'deoplete#sources#clang#debug#log_file')
             self.set_debug(os.path.expanduser(log_file))
 
     # @timeit(logger, 'simple', [0.00003000, 0.00015000])
@@ -72,24 +76,18 @@ class Source(Base):
     def gather_candidates(self, context):
         # faster than self.vim.current.window.cursor[0]
         line = self.vim.eval("line('.')")
-        col = (context['complete_position']+1)
+        col = (context['complete_position'] + 1)
         buf = self.vim.current.buffer
-        # args = self.get_compile_params(buf.name)
-        args = dict().fromkeys(['args', 'cwd'], [])
-        args['args'] = self.completion_flags
-
-        directory = buf.name.rsplit('/', 1)
-        args['args'].append('-I'+directory[0])
-        args['args'].append('-I'+os.path.join(directory[0], 'include'))
+        args = self.get_params(buf.name)
 
         complete = \
             self.get_completion(
                 buf.name, line, col,
                 self.get_current_buffer(buf),
-                args['args']
-            )
+                args['args'])
 
         try:
+            # TODO(zchee): Profiling
             # return [x for x in map(self.parse_candidates, complete.results)]
             return list(map(self.parse_candidates, complete.results))
         except Exception:
@@ -99,39 +97,20 @@ class Source(Base):
     def get_current_buffer(self, b):
         return [(b.name, "\n".join(b[:]) + "\n")]
 
-    def get_compilation_database(self, fileName):
-        last_query = dict().fromkeys(['args', 'cwd'], "")
-        if self.compilation_database:
-            cmds = cl.CompilationDatabase.getCompileCommands(filename)
-            if cmds != None:
-                cwd = cmds[0].directory
-                args = []
-                skip_next = 1 # Skip compiler invocation
-                for arg in cmds[0].arguments:
-                    if skip_next:
-                        skip_next = 0;
-                        continue
-                    if arg == '-c':
-                        continue
-                    if arg == fileName or \
-                        os.path.realpath(os.path.join(cwd, arg)) == fileName:
-                        continue
-                    if arg == '-o':
-                        skip_next = 1;
-                        continue
-                    if arg.startswith('-I'):
-                        includePath = arg[2:]
-                        if not os.path.isabs(includePath):
-                            includePath = os.path.normpath(os.path.join(cwd, includePath))
-                        args.append('-I'+includePath)
-                        continue
-                    args.append(arg)
-                last_query = { 'args': args, 'cwd': cwd }
-        query = last_query
-        return { 'args': list(query['args']), 'cwd': query['cwd']}
+    # @timeit(logger, 'simple', [0.00000200, 0.00000400])
+    def get_params(self, fname):
+        if self.params.get(fname) != None:
+            return self.params.get(fname)
+        else:
+            return self.get_compile_params(fname)
 
-    def get_compile_params(self, fileName):
-        params = self.get_compilation_database(os.path.abspath(fileName))
+    # @timeit(logger, 'simple', [0.00200000, 0.00300000])
+    def get_compile_params(self, fname):
+        if self.database.get(fname) != None:
+            params = self.database.get(fname)
+        else:
+            params = self.get_compilation_database(os.path.abspath(fname))
+
         args = params['args']
         headers = os.listdir(self.clang_header)
         directory = self.clang_header
@@ -146,11 +125,54 @@ class Source(Base):
                 # path = path + "/" + subDir + "/include/"
                 arg = "-I" + path
                 args.append("-I" + directory + path)
-
             except Exception:
                 pass
 
-        return { 'args' : args, 'cwd' : params['cwd'] }
+        out = {'args': args, 'cwd': params['cwd']}
+        self.params[fname] = out
+        return out
+
+    # @timeit(logger, 'simple', [0.00200000, 0.00300000])
+    def get_compilation_database(self, fname):
+        query = dict(args=self.completion_flags, cwd="")
+
+        # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
+        if self.compilation_database:
+            cmds = self.compilation_database.getCompileCommands(fname)
+            if cmds != None:
+                cwd = cmds[0].directory
+                args = []
+                skip = 1  # Skip compiler invocation
+                for i, arg in enumerate(cmds[0].arguments):
+                    if skip:
+                        skip = 0
+                        continue
+                    if skip or arg in \
+                            ['-c', fname,
+                             os.path.realpath(os.path.join(cwd, arg))]:
+                        skip = 0
+                        continue
+                    if arg == '-o':
+                        skip = 1
+                        continue
+                    if arg.startswith('-I'):
+                        includePath = arg[2:]
+                        if not os.path.isabs(includePath):
+                            includePath = os.path.normpath(
+                                os.path.join(cwd, includePath))
+                        args.append('-I' + includePath)
+                        continue
+                    args.append(arg)
+                # logger.debug(args)
+                query = {'args': args, 'cwd': cwd}
+
+        directory = fname.rsplit('/', 1)
+        args.append('-I' + directory[0])
+        args.append('-I' + os.path.join(directory[0], 'include'))
+
+        out = {'args': list(query['args']), 'cwd': query['cwd']}
+        self.database[fname] = out
+        return out
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_translation_unit(self, fname, args, buf_data):
