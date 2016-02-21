@@ -159,7 +159,7 @@ class Source(Base):
                 cwd = cmds[0].directory
                 args = []
                 skip = 1  # Skip compiler invocation
-                for i, arg in enumerate(cmds[0].arguments):
+                for arg in cmds[0].arguments:
                     if skip:
                         skip = 0
                         continue
