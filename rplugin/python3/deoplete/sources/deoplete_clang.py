@@ -163,17 +163,18 @@ class Source(Base):
                              os.path.realpath(os.path.join(cwd, arg))]:
                         skip = 0
                         continue
-                    if arg == '-o':
+                    elif arg == '-o':
                         skip = 1
                         continue
-                    if arg.startswith('-I'):
+                    elif arg.startswith('-I'):
                         include_path = arg[2:]
                         if not os.path.isabs(include_path):
                             include_path = os.path.normpath(
                                 os.path.join(cwd, include_path))
                         args.append('-I' + include_path)
                         continue
-                    args.append(arg)
+                    else:
+                        args.append(arg)
 
         directory = fname.rsplit('/', 1)
         args.append('-I' + directory[0])
