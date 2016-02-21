@@ -47,7 +47,6 @@ class Source(Base):
             get_var(self.vim, "deoplete#sources#clang#flags")
         self.sort_algo = \
             get_var(self.vim, "deoplete#sources#clang#sort_algo")
-        
 
         cl.Config.set_library_file(str(self.library_path))
         cl.Config.set_compatibility_check(False)
@@ -84,14 +83,14 @@ class Source(Base):
         try:
             args = self.get_params(buf.name)
         except Exception:
-            args = dict().fromkeys(['args', 'cwd'], [])
+            args = dict().fromkeys(['args'], [])
             args['args'] = self.completion_flags
 
         complete = \
             self.get_completion(
                 buf.name, line, col,
                 self.get_current_buffer(buf),
-                args['args'])
+                args)
         if complete is None:
             return []
 
@@ -132,7 +131,7 @@ class Source(Base):
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
 
-        args = params['args']
+        args = params
 
         versions = os.listdir(self.clang_header)
         sorted(versions)
@@ -145,13 +144,13 @@ class Source(Base):
         except Exception:
             pass
 
-        out = {'args': args, 'cwd': params['cwd']}
+        out = {'args': args}
         self.params[fname] = out
         return out
 
     # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compilation_database(self, fname):
-        query = dict(args=self.completion_flags, cwd="")
+        query = dict(args=self.completion_flags)
 
         # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
@@ -180,14 +179,13 @@ class Source(Base):
                         args.append('-I' + include_path)
                         continue
                     args.append(arg)
-                query = {'args': args, 'cwd': cwd}
 
         directory = fname.rsplit('/', 1)
         args.append('-I' + directory[0])
         args.append('-I' + os.path.join(directory[0], 'include'))
         # logger.debug(args)
 
-        out = {'args': list(query['args']), 'cwd': query['cwd']}
+        out = {'args': args}
         self.database[fname] = out
         return out
 
