@@ -103,8 +103,6 @@ class Source(Base):
         else:
             results = complete.results
 
-        # TODO(zchee): Profiling
-        # return [x for x in map(self.parse_candidates, results)]
         return list(map(self.parse_candidates, results))
 
     # @timeit(logger, 'simple', [0.20000000, 0.30000000])
