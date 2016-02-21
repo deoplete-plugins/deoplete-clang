@@ -199,7 +199,7 @@ class Source(Base):
         # PARSE_CACHE_COMPLETION_RESULTS = 8
         # PARSE_SKIP_FUNCTION_BODIES = 64
         # PARSE_INCLUDE_BRIEF_COMMENTS_IN_CODE_COMPLETION = 128
-        flags = 13
+        flags = 15
         tu = self.index.parse(fname, args, buf_data, flags)
 
         self.tu_data[fname] = tu
