@@ -109,7 +109,7 @@ class Source(Base):
 
     # @timeit(logger, 'simple', [0.20000000, 0.30000000])
     def get_current_buffer(self, b):
-        return [(b.name, "\n".join(b[:]) + "\n")]
+        return [(b.name, '\n'.join(b[:]))]
 
     def get_abbr(self, strings):
         for chunks in strings:
