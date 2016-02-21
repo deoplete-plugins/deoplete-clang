@@ -235,7 +235,7 @@ class Source(Base):
             chunk_spelling = chunk.spelling
 
             if chunk.isKindInformative() or chunk.isKindPlaceHolder() or \
-                    chunk_spelling == cl.CompletionChunk.Kind("Comma") or \
+                    str(chunk.kind) == 'Comma' or \
                     chunk_spelling == None:
                 continue
 
