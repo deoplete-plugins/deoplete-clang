@@ -40,20 +40,19 @@ class Source(Base):
                               r'[a-zA-Z_]\w*::\w*')
 
         self.library_path = \
-            get_var(self.vim, 'deoplete#sources#clang#libclang_path')
+            self.vim.vars['deoplete#sources#clang#libclang_path']
         self.clang_header = \
-            os.path.abspath(
-                get_var(self.vim, 'deoplete#sources#clang#clang_header'))
+            self.vim.vars['deoplete#sources#clang#clang_header']
         self.completion_flags = \
-            get_var(self.vim, "deoplete#sources#clang#flags")
+            self.vim.vars["deoplete#sources#clang#flags"]
         self.sort_algo = \
-            get_var(self.vim, "deoplete#sources#clang#sort_algo")
+            self.vim.vars["deoplete#sources#clang#sort_algo"]
 
         cl.Config.set_library_file(str(self.library_path))
         cl.Config.set_compatibility_check(False)
 
         clang_complete_database = \
-            get_var(self.vim, 'deoplete#sources#clang#clang_complete_database')
+            self.vim.vars['deoplete#sources#clang#clang_complete_database']
         if clang_complete_database != '':
             self.compilation_database = \
                 cl.CompilationDatabase.fromDirectory(clang_complete_database)
