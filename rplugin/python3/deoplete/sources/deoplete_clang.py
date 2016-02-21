@@ -123,8 +123,7 @@ class Source(Base):
                 # else:
                 #     subDir = '.'
                 # path = path + "/" + subDir + "/include/"
-                arg = "-I" + path
-                args.append("-I" + directory + path)
+                args.append('-I' + directory + path)
             except Exception:
                 pass
 
@@ -156,11 +155,11 @@ class Source(Base):
                         skip = 1
                         continue
                     if arg.startswith('-I'):
-                        includePath = arg[2:]
-                        if not os.path.isabs(includePath):
-                            includePath = os.path.normpath(
-                                os.path.join(cwd, includePath))
-                        args.append('-I' + includePath)
+                        include_path = arg[2:]
+                        if not os.path.isabs(include_path):
+                            include_path = os.path.normpath(
+                                os.path.join(cwd, include_path))
+                        args.append('-I' + include_path)
                         continue
                     args.append(arg)
                 # logger.debug(args)
