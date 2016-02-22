@@ -19,11 +19,10 @@ logger = getLogger(__name__)
 
 # Profiler
 from profiler import timeit
-# PyVmMonitor_dir = '/Applications/PyVmMonitor.app/Contents/MacOS/public_api'
-# sys.path.append(PyVmMonitor_dir)
+# pyvmmonitor_dir = '/Applications/PyVmMonitor.app/Contents/MacOS/public_api'
+# sys.path.append(pyvmmonitor_dir)
 # import pyvmmonitor
 # @pyvmmonitor.profile_method()
-
 
 class Source(Base):
 
@@ -95,11 +94,11 @@ class Source(Base):
             return []
 
         if self.sort_algo == 'priority':
-            getPriority = lambda x: x.string.priority
-            results = sorted(complete.results, key=getPriority)
+            get_priority = lambda x: x.string.priority
+            results = sorted(complete.results, key=get_priority)
         elif self.sort_algo == 'alphabetical':
-            getAbbrevation = lambda x: self.get_abbr(x.string).lower()
-            results = sorted(complete.results, key=getAbbrevation)
+            get_abbrevation = lambda x: self.get_abbr(x.string).lower()
+            results = sorted(complete.results, key=get_abbrevation)
         else:
             results = complete.results
 
@@ -126,14 +125,14 @@ class Source(Base):
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_params(self, fname):
-        if self.params.get(fname) != None:
+        if self.params.get(fname) is not None:
             return self.params.get(fname)
         else:
             return self.get_compile_params(fname)
 
     # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compile_params(self, fname):
-        if self.database.get(fname) != None:
+        if self.database.get(fname) is not None:
             params = self.database.get(fname)
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
@@ -150,7 +149,7 @@ class Source(Base):
         # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
             cmds = self.compilation_database.getCompileCommands(fname)[0]
-            if cmds != None:
+            if cmds is not None:
                 cwd = cmds.directory
                 skip = 1
                 for arg in cmds.arguments:
@@ -203,7 +202,7 @@ class Source(Base):
 
     # @timeit(logger, 'simple', [0.01500000, 0.02500000])
     def get_completion(self, fname, line, column, buf, args):
-        if self.tu_data.get(fname) != None:
+        if self.tu_data.get(fname) is not None:
             tu = self.tu_data.get(fname)
         else:
             tu = self.get_translation_unit(fname, args, buf)
