@@ -81,15 +81,16 @@ class Source(Base):
         col = (context['complete_position'] + 1)
         buf = self.vim.current.buffer
         if self.compilation_database:
-            args = self.get_params(buf.name)
+            params = self.get_params(buf.name)
         else:
-            args = dict().fromkeys(['args'], self.completion_flags)
+            params = self.completion_flags
+            params.append('-I' + self.get_builtin_clang_header())
 
         complete = \
             self.get_completion(
                 buf.name, line, col,
                 self.get_current_buffer(buf),
-                args)
+                params)
         if complete is None:
             return []
 
@@ -114,6 +115,15 @@ class Source(Base):
                 return chunks.spelling
         return ""
 
+    def get_builtin_clang_header(self):
+        include_dir = self.clang_header
+        versions = os.listdir(include_dir)
+        # Use latest clang version
+        sorted(versions)
+        latest = versions[-1]
+
+        return os.path.join(include_dir, latest, 'include')
+
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_params(self, fname):
         if self.params.get(fname) != None:
@@ -128,23 +138,14 @@ class Source(Base):
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
 
-        args = [params]
+        params.append('-I' + self.get_builtin_clang_header())
 
-        versions = os.listdir(self.clang_header)
-        sorted(versions)
-        version = versions[-1]
-
-        headers = os.path.join(self.clang_header, version, 'include')
-        for path in os.listdir(headers):
-            args.append(
-                '-I' + os.path.join(self.clang_header + version + path))
-
-        self.params[fname] = {'args': args}
-        return {'args': args}
+        self.params[fname] = params
+        return params
 
     # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compilation_database(self, fname):
-        args = self.completion_flags
+        params = self.completion_flags
 
         # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
@@ -166,18 +167,14 @@ class Source(Base):
                         if not os.path.isabs(include_path):
                             include_path = os.path.normpath(
                                 os.path.join(cwd, include_path))
-                        args.append('-I' + include_path)
+                        params.append('-I' + include_path)
                         continue
                     else:
-                        args.append(arg)
+                        params.append(arg)
 
-        directory = fname.rsplit('/', 1)
-        args.append('-I' + directory[0])
-        args.append('-I' + os.path.join(directory[0], 'include'))
         # logger.debug(args)
-
-        self.database[fname] = {'args': args}
-        return {'args': args}
+        self.database[fname] = params
+        return params
 
     # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_translation_unit(self, fname, args, buf):
