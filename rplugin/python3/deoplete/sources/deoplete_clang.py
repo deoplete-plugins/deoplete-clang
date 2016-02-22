@@ -144,14 +144,13 @@ class Source(Base):
 
     # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compilation_database(self, fname):
-        query = dict(args=self.completion_flags)
+        args = self.completion_flags
 
         # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
             cmds = self.compilation_database.getCompileCommands(fname)[0]
             if cmds != None:
                 cwd = cmds.directory
-                args = []
                 skip = 1
                 for arg in cmds.arguments:
                     if skip or arg in \
