@@ -218,33 +218,24 @@ class Source(Base):
         completion['dup'] = 1
         _type = ""
         word = ""
-        abbr = ""
-        info = ""
+        placeholder = ""
 
         for chunk in result.string:
             chunk_spelling = chunk.spelling
 
-            if chunk.isKindInformative() or chunk.isKindPlaceHolder() or \
-                    str(chunk.kind) in ['Comma', 'LeftParen', 'RightParen'] or \
-                    chunk_spelling == None:
+            if chunk.isKindTypedText():
+                word += chunk_spelling
+                placeholder += chunk_spelling
                 continue
 
             elif chunk.isKindResultType():
                 _type += chunk_spelling
                 continue
 
-            elif chunk.isKindTypedText():
-                abbr += chunk_spelling
-                word += chunk_spelling
-                info += chunk_spelling
-                continue
-            else:
-                word += chunk_spelling
-                info += chunk_spelling
+            placeholder += chunk_spelling
 
         completion['word'] = word
-        completion['abbr'] = abbr
-        completion['info'] = info
+        completion['abbr'] = completion['info'] = placeholder
 
         if result.cursorKind in ClangData.kinds:
             completion['kind'] = ' '.join(
