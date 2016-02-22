@@ -136,7 +136,8 @@ class Source(Base):
 
         headers = os.path.join(self.clang_header, version, 'include')
         for path in os.listdir(headers):
-            args.append('-I' + os.path.join(self.clang_header + version + path))
+            args.append(
+                '-I' + os.path.join(self.clang_header + version + path))
 
         self.params[fname] = {'args': args}
         return {'args': args}
