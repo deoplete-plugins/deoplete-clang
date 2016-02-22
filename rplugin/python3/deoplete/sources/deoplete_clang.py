@@ -74,7 +74,7 @@ class Source(Base):
         m = re.search(r'\w*$', context['input'])
         return m.start() if m else -1
 
-    @timeit(logger, 'simple', [0.02000000, 0.05000000])
+    # @timeit(logger, 'simple', [0.02000000, 0.05000000])
     def gather_candidates(self, context):
         # faster than self.vim.current.window.cursor[0]
         line = self.vim.eval("line('.')")
