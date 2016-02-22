@@ -229,7 +229,7 @@ class Source(Base):
             chunk_spelling = chunk.spelling
 
             if chunk.isKindInformative() or chunk.isKindPlaceHolder() or \
-                    str(chunk.kind) == 'Comma' or \
+                    str(chunk.kind) in ['Comma', 'LeftParen', 'RightParen'] or \
                     chunk_spelling == None:
                 continue
 
