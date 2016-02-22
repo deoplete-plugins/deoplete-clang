@@ -168,8 +168,7 @@ class Source(Base):
                                 os.path.join(cwd, include_path))
                         params.append('-I' + include_path)
                         continue
-                    else:
-                        params.append(arg)
+                    params.append(arg)
 
         # logger.debug(args)
         self.database[fname] = params
