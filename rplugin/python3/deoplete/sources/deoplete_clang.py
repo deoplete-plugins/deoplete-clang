@@ -116,6 +116,8 @@ class Source(Base):
 
     def get_builtin_clang_header(self):
         include_dir = self.clang_header
+        if not include_dir:
+            return ''
         versions = os.listdir(include_dir)
         # Use latest clang version
         sorted(versions)
@@ -137,7 +139,9 @@ class Source(Base):
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
 
-        params.append('-I' + self.get_builtin_clang_header())
+        header = self.get_builtin_clang_header()
+        if header:
+            params.append('-I' + header)
 
         self.params[fname] = params
         return params
