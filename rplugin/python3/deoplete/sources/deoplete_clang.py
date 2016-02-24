@@ -215,8 +215,7 @@ class Source(Base):
 
     # @timeit(logger, 'verbose', [0.00000500, 0.00002000])
     def parse_candidates(self, result):
-        completion = dict().fromkeys(['word', 'abbr', 'kind', 'info'], "")
-        completion['dup'] = 1
+        completion = {'dup': 1}
         _type = ""
         word = ""
         placeholder = ""
@@ -231,18 +230,15 @@ class Source(Base):
 
             elif chunk.isKindResultType():
                 _type += chunk_spelling
-                continue
-
-            placeholder += chunk_spelling
+            else:
+                placeholder += chunk_spelling
 
         completion['word'] = word
         completion['abbr'] = completion['info'] = placeholder
 
-        if result.cursorKind in ClangData.kinds:
-            completion['kind'] = ' '.join(
-                [ClangData.kinds[result.cursorKind], _type])
-        else:
-            completion['kind'] = ' '.join(
-                [str(result.cursorKind), _type])
+        completion['kind'] = ' '.join(
+            [(ClangData.kinds[result.cursorKind]
+              if (result.cursorKind in ClangData.kinds)
+              else str(result.cursorKind)), _type])
 
         return completion
