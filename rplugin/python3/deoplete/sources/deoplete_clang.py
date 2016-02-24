@@ -75,8 +75,7 @@ class Source(Base):
 
     # @timeit(logger, 'simple', [0.02000000, 0.05000000])
     def gather_candidates(self, context):
-        # faster than self.vim.current.window.cursor[0]
-        line = self.vim.eval("line('.')")
+        line = context['position'][1]
         col = (context['complete_position'] + 1)
         buf = self.vim.current.buffer
         if self.compilation_database:
