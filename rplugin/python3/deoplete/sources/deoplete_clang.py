@@ -126,14 +126,14 @@ class Source(Base):
         return os.path.join(include_dir, latest, 'include')
 
     def get_params(self, fname):
-        if self.params.get(fname) is not None:
-            return self.params.get(fname)
+        if fname in self.params:
+            return self.params[fname]
         else:
             return self.get_compile_params(fname)
 
     def get_compile_params(self, fname):
-        if self.database.get(fname) is not None:
-            params = self.database.get(fname)
+        if fname in self.database:
+            params = self.database[fname]
         else:
             params = self.get_compilation_database(os.path.abspath(fname))
 
@@ -198,8 +198,8 @@ class Source(Base):
         return tu
 
     def get_completion(self, fname, line, column, buf, args):
-        if self.tu_data.get(fname) is not None:
-            tu = self.tu_data.get(fname)
+        if fname in self.tu_data:
+            tu = self.tu_data[fname]
         else:
             tu = self.get_translation_unit(fname, args, buf)
 
