@@ -219,7 +219,7 @@ class Source(Base):
         word = ""
         placeholder = ""
 
-        for chunk in result.string:
+        for chunk in [x for x in result.string if x.spelling]:
             chunk_spelling = chunk.spelling
 
             if chunk.isKindTypedText():
