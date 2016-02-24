@@ -84,11 +84,10 @@ class Source(Base):
             params = self.completion_flags
             params.append('-I' + self.get_builtin_clang_header())
 
-        complete = \
-            self.get_completion(
-                buf.name, line, col,
-                self.get_current_buffer(buf),
-                params)
+        complete = self.get_completion(
+            buf.name, line, col,
+            self.get_current_buffer(buf),
+            params)
         if complete is None:
             return []
 
