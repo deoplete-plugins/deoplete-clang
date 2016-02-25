@@ -6,21 +6,14 @@ from deoplete.sources.base import Base
 from deoplete.util import load_external_module
 
 current = __file__
+
 load_external_module(current, 'clang')
 import clang.cindex as cl
 
 load_external_module(current, 'sources/deoplete_clang')
 from clang_data import index_h
-from helper import set_debug
 
 logger = getLogger(__name__)
-
-# Profiler
-# from profiler import timeit
-# pyvmmonitor_dir = '/Applications/PyVmMonitor.app/Contents/MacOS/public_api'
-# sys.path.append(pyvmmonitor_dir)
-# import pyvmmonitor
-# @pyvmmonitor.profile_method()
 
 
 class Source(Base):
@@ -61,21 +54,10 @@ class Source(Base):
         # TODO(zchee): More elegant way
         self.tu_data, self.params, self.database = dict(), dict(), dict()
 
-        # debug
-        try:
-            if self.vim.vars['deoplete#enable_debug']:
-                log_file = \
-                    self.vim.vars['deoplete#sources#clang#debug#log_file']
-                set_debug(logger, os.path.expanduser(log_file))
-        except Exception:
-            pass
-
-    # @timeit(logger, 'simple', [0.00003000, 0.00015000])
     def get_complete_position(self, context):
         m = re.search(r'\w*$', context['input'])
         return m.start() if m else -1
 
-    # @timeit(logger, 'simple', [0.02000000, 0.05000000])
     def gather_candidates(self, context):
         line = context['position'][1]
         col = (context['complete_position'] + 1)
@@ -104,7 +86,6 @@ class Source(Base):
 
         return list(map(self.parse_candidates, results))
 
-    # @timeit(logger, 'simple', [0.20000000, 0.30000000])
     def get_current_buffer(self, b):
         return [(b.name, '\n'.join(b[:]))]
 
@@ -125,14 +106,12 @@ class Source(Base):
 
         return os.path.join(include_dir, latest, 'include')
 
-    # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_params(self, fname):
         if self.params.get(fname) is not None:
             return self.params.get(fname)
         else:
             return self.get_compile_params(fname)
 
-    # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compile_params(self, fname):
         if self.database.get(fname) is not None:
             params = self.database.get(fname)
@@ -146,7 +125,6 @@ class Source(Base):
         self.params[fname] = params
         return params
 
-    # @timeit(logger, 'simple', [0.00200000, 0.00300000])
     def get_compilation_database(self, fname):
         params = self.completion_flags
 
@@ -178,7 +156,6 @@ class Source(Base):
         self.database[fname] = params
         return params
 
-    # @timeit(logger, 'simple', [0.00000200, 0.00000400])
     def get_translation_unit(self, fname, args, buf):
         # cl.TranslationUnit
         # PARSE_NONE = 0
@@ -203,7 +180,6 @@ class Source(Base):
 
         return tu
 
-    # @timeit(logger, 'simple', [0.01500000, 0.02500000])
     def get_completion(self, fname, line, column, buf, args):
         if self.tu_data.get(fname) is not None:
             tu = self.tu_data.get(fname)
@@ -215,7 +191,6 @@ class Source(Base):
                                include_code_patterns=False,
                                include_brief_comments=False)
 
-    # @timeit(logger, 'verbose', [0.00000500, 0.00002000])
     def parse_candidates(self, result):
         completion = {'dup': 1}
         _type = ""
