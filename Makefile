@@ -13,11 +13,16 @@ PROFILER := ${RPLUGIN_PATH}/deoplete_clang/profiler.py
 
 all: autopep8
 
-autopep8: clean
-	@autopep8 -i ${DEOPLETE_CLANG}
+test: test_modules flake8
+
+test_modules:
+	pip3 install -U -r ./test/requirements.txt
 
 flake8:
 	@flake8 -v --config=$(PWD)/.flake8 ${DEOPLETE_CLANG} ${HELPER} ${PROFILER} || true
+
+autopep8: clean
+	@autopep8 -i ${DEOPLETE_CLANG}
 
 clean:
 	@echo "Cleanup debug code in ${CYELLOW}${DEOPLETE_CLANG}${CRESET}..."
