@@ -25,6 +25,6 @@ let g:deoplete#sources#clang#sort_algo = 'alphabetical'
 let g:deoplete#sources#clang#clang_complete_database = '/path/to/neovim/build'
 
 " debug
-let deoplete#enable_debug = 1
+let g:deoplete#enable_debug = 1
 let g:deoplete#sources#clang#debug#log_file = '~/.log/nvim/python/deoplete-clang.log'
 ```
