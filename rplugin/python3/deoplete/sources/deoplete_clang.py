@@ -46,7 +46,7 @@ class Source(Base):
         self.sort_algo = \
             self.vim.vars["deoplete#sources#clang#sort_algo"]
 
-        cl.Config.set_library_file(str(self.library_path))
+        cl.Config.set_library_file(self.library_path)
         cl.Config.set_compatibility_check(False)
 
         clang_complete_database = \
