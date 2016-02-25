@@ -13,5 +13,10 @@ TIMEIT_GET_COMPLETION := ${TIMEIT_PREFIX}"simple", [0.01500000, 0.02500000]${TIM
 TIMEIT_PARSE_CANDIDATES := ${TIMEIT_PREFIX}"verbose", [0.00000500, 0.00002000]${TIMEIT_SUFFIX}
 
 LOGGER_GET_COMPILE_PARAMS := logger.debug(params)
+LOGGER_GET_COMPILE_PARAMS_SUFFIX := self.params\[fname\] = params
+
 LOGGER_GET_COMPILATION_DATABASE_BEFORE := logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
+LOGGER_GET_COMPILATION_DATABASE_BEFORE_SUFFIX := if self.compilation_database:
+
 LOGGER_GET_COMPILATION_DATABASE_AFTER := logger.debug(params)
+LOGGER_GET_COMPILATION_DATABASE_AFTER_SUFFIX := self.database\[fname\] = params

@@ -7,23 +7,24 @@ RPLUGIN_PATH := ./rplugin/python3/deoplete/sources/
 MODULE_NAME := deoplete_clang.py
 MODULE_PATH := ${RPLUGIN_PATH}${MODULE_NAME}
 
-all: clean
+all: autopep8
+
+autopep8: clean
+	autopep8 -i ${MODULE_PATH}
 
 clean:
 	@echo "Cleanup debug code in ${CYELLOW}${MODULE_PATH}${CRESET}..."
 	@sed -i ':a;N;$$!ba;s/\n        try:.*    def get_complete_position/\n    def get_complete_position/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 	@sed -i ':a;N;$$!ba;s/from profiler import timeit\n//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i ':a;N;$$!ba;s/logger = getLogger(__name__)\n\n//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
+	@sed -i ':a;N;$$!ba;s/from logging import getLogger\nlogger = getLogger(__name__)\n\n//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 	@sed -i 's/^    @timeit.*$$//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 	@sed -i 's/^        logger.*$$//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i ':a;N;$$!ba;s/\n\n        self.database\[fname\] = params/\n        self.database\[fname\] = params/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i ':a;N;$$!ba;s/params = self.completion_flags\n\n\n/params = self.completion_flags\n\n/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 
 set_debug:
 	@sed -i ':a;N;$$!ba;s/${SET_DEBUG_PREFIX}\n\n    def get_complete_position/${SET_DEBUG_PREFIX}\n\n        ${SET_DEBUG}\n    def get_complete_position/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 
 import_logger: set_debug
-	@sed -i ':a;N;$$!ba;s/from clang_data import index_h\n\n\nclass Source/from clang_data import index_h\n\nlogger = getLogger(__name__)\n\n\nclass Source/g' ${MODULE_PATH}
+	@sed -i ':a;N;$$!ba;s/from clang_data import index_h\n\n\nclass Source/from clang_data import index_h\n\nfrom logging import getLogger\nlogger = getLogger(__name__)\n\n\nclass Source/g' ${MODULE_PATH}
 
 import_timeit: set_debug
 	@sed -i ':a;N;$$!ba;s/\n\n\nclass Source/\n\nfrom profiler import timeit\n\nclass Source/g' ${MODULE_PATH}
@@ -66,11 +67,11 @@ timeit-parse_candidates: import_timeit
 
 logger-get_compile_params: import_logger
 	@echo "Enable $(subst logger-,,$@) debug logger in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n        self.params\[fname\] = params/\n\n        ${LOGGER_GET_COMPILE_PARAMS}\n        self.params\[fname\] = params/g' ${MODULE_PATH}
+	@sed -i ':a;N;$$!ba;s/\n\n        ${LOGGER_GET_COMPILE_PARAMS_SUFFIX}/\n\n        ${LOGGER_GET_COMPILE_PARAMS}\n        ${LOGGER_GET_COMPILE_PARAMS_SUFFIX}/g' ${MODULE_PATH}
 
 logger-get_compilation_database: import_logger
 	@echo "Enable $(subst logger-,,$@) debug logger in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n        if self.compilation_database:/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_BEFORE}\n        if self.compilation_database:/g' ${MODULE_PATH}
-	@sed -i ':a;N;$$!ba;s/\n\n        self.database\[fname\] = params/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_AFTER}\n        self.database\[fname\] = params/g' ${MODULE_PATH}
+	@sed -i ':a;N;$$!ba;s/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_BEFORE_SUFFIX}/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_BEFORE}\n        ${LOGGER_GET_COMPILATION_DATABASE_BEFORE_SUFFIX}/g' ${MODULE_PATH}
+	@sed -i ':a;N;$$!ba;s/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_AFTER_SUFFIX}/\n\n        ${LOGGER_GET_COMPILATION_DATABASE_AFTER}\n        ${LOGGER_GET_COMPILATION_DATABASE_AFTER_SUFFIX}/g' ${MODULE_PATH}
 
 .PHONY: clean set_debug import_timeit
