@@ -10,7 +10,7 @@ load_external_module(current, 'clang')
 import clang.cindex as cl
 
 load_external_module(current, 'sources/deoplete_clang')
-from clang_data import ClangData
+from clang_data import index_h
 from helper import set_debug
 
 logger = getLogger(__name__)
@@ -239,8 +239,8 @@ class Source(Base):
         completion['abbr'] = completion['info'] = placeholder
 
         completion['kind'] = ' '.join(
-            [(ClangData.kinds[result.cursorKind]
-              if (result.cursorKind in ClangData.kinds)
+            [(index_h.kinds[result.cursorKind]
+              if (result.cursorKind in index_h.kinds)
               else str(result.cursorKind)), _type])
 
         return completion

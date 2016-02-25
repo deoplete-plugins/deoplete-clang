@@ -1,4 +1,4 @@
-class ClangData(object):
+class index_h(object):
     kinds = dict({
         # Declarations
           1:   't',   # CXCursor_UnexposedDecl # A declaration whose specific kind
