@@ -14,16 +14,16 @@ clean:
 	@sed -i ':a;N;$$!ba;s/\n        try:.*    def get_complete_position/\n    def get_complete_position/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 	@sed -i ':a;N;$$!ba;s/from profiler import timeit\n//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 	@sed -i ':a;N;$$!ba;s/logger = getLogger(__name__)\n\n//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i "s/    @timeit.*//g" ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i 's/^        logger.*//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i ':a;N;$$!ba;s/\n\n\n    def/\n\n    def/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
-	@sed -i ':a;N;$$!ba;s/\n\n\n        /\n\n        /g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
+	@sed -i 's/^    @timeit.*$$//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
+	@sed -i 's/^        logger.*$$//g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
+	@sed -i ':a;N;$$!ba;s/\n\n        self.database\[fname\] = params/\n        self.database\[fname\] = params/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
+	@sed -i ':a;N;$$!ba;s/params = self.completion_flags\n\n\n/params = self.completion_flags\n\n/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 
 set_debug:
 	@sed -i ':a;N;$$!ba;s/${SET_DEBUG_PREFIX}\n\n    def get_complete_position/${SET_DEBUG_PREFIX}\n\n        ${SET_DEBUG}\n    def get_complete_position/g' ./rplugin/python3/deoplete/sources/deoplete_clang.py
 
 import_logger: set_debug
-	@sed -i ':a;N;$$!ba;s/\n\n\nclass Source/\n\nlogger = getLogger(__name__)\n\n\nclass Source/g' ${MODULE_PATH}
+	@sed -i ':a;N;$$!ba;s/from clang_data import index_h\n\n\nclass Source/from clang_data import index_h\n\nlogger = getLogger(__name__)\n\n\nclass Source/g' ${MODULE_PATH}
 
 import_timeit: set_debug
 	@sed -i ':a;N;$$!ba;s/\n\n\nclass Source/\n\nfrom profiler import timeit\n\nclass Source/g' ${MODULE_PATH}
