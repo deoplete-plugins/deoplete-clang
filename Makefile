@@ -22,40 +22,40 @@ set_debug:
 import_timeit: set_debug
 	@sed -i ':a;N;$$!ba;s/\n\n\nclass Source/\n\nfrom profiler import timeit\n\nclass Source/g' ${MODULE_PATH}
 
-get_complete_position: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_COMPLETE_POSITION}\n    def $@/g' ${MODULE_PATH}
+timeit-get_complete_position: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_COMPLETE_POSITION}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-gather_candidates: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GATHER_CANDIDATES}\n    def $@/g' ${MODULE_PATH}
+timeit-gather_candidates: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GATHER_CANDIDATES}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_current_buffer: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_CURRENT_BUFFER}\n    def $@/g' ${MODULE_PATH}
+timeit-get_current_buffer: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_CURRENT_BUFFER}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_params: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_PARAMS}\n    def $@/g' ${MODULE_PATH}
+timeit-get_params: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_PARAMS}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_compile_params: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_COMPILE_PARAMS}\n    def $@/g' ${MODULE_PATH}
+timeit-get_compile_params: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_COMPILE_PARAMS}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_compilation_database: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_COMPILATION_DATABASE}\n    def $@/g' ${MODULE_PATH}
+timeit-get_compilation_database: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_COMPILATION_DATABASE}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_translation_unit: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_TRANSLATION_UNIT}\n    def $@/g' ${MODULE_PATH}
+timeit-get_translation_unit: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_TRANSLATION_UNIT}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-get_completion: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_GET_COMPLETION}\n    def $@/g' ${MODULE_PATH}
+timeit-get_completion: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_GET_COMPLETION}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
-parse_candidates: import_timeit
-	@echo "Enable $@ @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
-	@sed -i ':a;N;$$!ba;s/\n\n    def $@/\n\n    ${TIMEIT_PARSE_CANDIDATES}\n    def $@/g' ${MODULE_PATH}
+timeit-parse_candidates: import_timeit
+	@echo "Enable $(subst timeit-,,$@) @timeit decorator in ${CYELLOW}${MODULE_PATH}${CRESET}..."
+	@sed -i ':a;N;$$!ba;s/\n\n    def $(subst timeit-,,$@)/\n\n    ${TIMEIT_PARSE_CANDIDATES}\n    def $(subst timeit-,,$@)/g' ${MODULE_PATH}
 
 .PHONY: clean set_debug import_timeit
