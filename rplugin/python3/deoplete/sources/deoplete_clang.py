@@ -16,7 +16,7 @@ from helper import set_debug
 logger = getLogger(__name__)
 
 # Profiler
-from profiler import timeit
+# from profiler import timeit
 # pyvmmonitor_dir = '/Applications/PyVmMonitor.app/Contents/MacOS/public_api'
 # sys.path.append(pyvmmonitor_dir)
 # import pyvmmonitor
