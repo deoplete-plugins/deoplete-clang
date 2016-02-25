@@ -128,7 +128,6 @@ class Source(Base):
     def get_compilation_database(self, fname):
         params = self.completion_flags
 
-        # logger.debug(list(self.compilation_database.getCompileCommands(fname)[0].arguments))
         if self.compilation_database:
             cmds = self.compilation_database.getCompileCommands(fname)[0]
             if cmds is not None:
@@ -152,7 +151,6 @@ class Source(Base):
                         continue
                     params.append(arg)
 
-        # logger.debug(args)
         self.database[fname] = params
         return params
 
