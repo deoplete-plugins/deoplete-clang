@@ -13,8 +13,6 @@ import clang.cindex as cl
 load_external_module(current, 'sources/deoplete_clang')
 from clang_data import index_h
 
-logger = getLogger(__name__)
-
 
 class Source(Base):
 
