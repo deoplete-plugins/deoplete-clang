@@ -1,20 +1,18 @@
 import os
 import re
-import sys
+from logging import getLogger
 
 from deoplete.sources.base import Base
+from deoplete.util import load_external_module
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, current_dir)
-from clang_data import ClangData
-from helper import get_var
-from helper import load_external_module
-from helper import set_debug
-
-load_external_module('clang')
+current = __file__
+load_external_module(current, 'clang')
 import clang.cindex as cl
 
-from logging import getLogger
+load_external_module(current, 'sources/deoplete_clang')
+from clang_data import ClangData
+from helper import set_debug
+
 logger = getLogger(__name__)
 
 # Profiler
@@ -63,10 +61,13 @@ class Source(Base):
         self.tu_data, self.params, self.database = dict(), dict(), dict()
 
         # debug
-        if get_var(self.vim, 'deoplete#enable_debug'):
-            log_file = get_var(
-                self.vim, 'deoplete#sources#clang#debug#log_file')
-            set_debug(logger, os.path.expanduser(log_file))
+        try:
+            if self.vim.vars['deoplete#enable_debug']:
+                log_file = \
+                    self.vim.vars['deoplete#sources#clang#debug#log_file']
+                set_debug(logger, os.path.expanduser(log_file))
+        except Exception:
+            pass
 
     # @timeit(logger, 'simple', [0.00003000, 0.00015000])
     def get_complete_position(self, context):
