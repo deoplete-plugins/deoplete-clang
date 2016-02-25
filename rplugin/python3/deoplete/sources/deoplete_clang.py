@@ -1,6 +1,6 @@
+from logging import getLogger
 import os
 import re
-from logging import getLogger
 
 from deoplete.sources.base import Base
 from deoplete.util import load_external_module
