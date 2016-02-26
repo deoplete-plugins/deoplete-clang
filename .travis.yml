@@ -1,0 +1,25 @@
+language: python
+
+cache:
+  directories:
+  - "$HOME/.cache/pip"
+
+matrix:
+  include:
+  - sudo: required
+    os: linux
+    dist: trusty
+    compiler: clang
+    python: '3.5-dev'
+
+install:
+  - pip3 install -r ci/requirements.txt
+
+script:
+  - make lint
+
+notifications:
+  email: false
+  slack:
+    rooms:
+      secure: kZZ8lKPUd95Iq5MSHhMfL2no0BvKSHjLB57yH3vbcAQebVrv3MH98UvYiqiOfZgRgBX6H4Kl3RHzdAyEGkfNG2KV/tXtkn9+pHGvue/SOgx6vVl4k8tY8USwp3NxhD9ibO5YG5Om/LtMNfp1uCx8PqsW7xn+2A9iAOMAzHKPZyH8XrAo2erayh+q4V7nko41uaRuot5GPje/yQjF+XGcfSN5LyZzrml0lJA6+MjlP40kf+b12Kf9UYZwbGv8EsknXYMGGqtd1dhDj1K1XKsHtpreL989fxeXkGvVY98T9PNUp/Y4Bb3nZis6oEXg9pG6yoypi+2WLVX9BC5BMIUoabw85epFU2kjwvw8caQ6zsbaVZiGZmLGy3cfzSVt3fJ+j6Jbj7JbgNJ4japw9TI6Z21lERWKkW5RBZYWQvWI5RxkYHFL3eZ+wh5+ujf1E965bbHhfVGMg7kUz3b+bDOWm3jrhm/yNi2uae4HNXfQi7hEZP79z2q/C7SXMkqR31d7hpAuuo0TBcOUlCKNUD0/XIzQUw/TTnRztucslpe4ilLwiiigcRCIruKmjHtnkqTRodlApY5yY6+/EQ+zV0CuUAj2yNy2c/HIv3r2evrIt2gSRqcjVZYmF7CgqWU0co+uFSlB7D0//hL9pOtvB1qDSVnaF7qUw2QRAQVw+/BMR88=
