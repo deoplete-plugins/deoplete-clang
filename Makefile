@@ -15,6 +15,8 @@ PROFILER := ${RPLUGIN_PATH}/deoplete_clang/profiler.py
 
 all: autopep8
 
+test: flake8
+
 lint: lint_modules flake8
 
 lint_modules:

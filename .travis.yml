@@ -16,7 +16,7 @@ install:
   - pip3 install -r ci/requirements.txt
 
 script:
-  - make lint
+  - make test
 
 notifications:
   email: false
