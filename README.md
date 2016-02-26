@@ -1,3 +1,7 @@
+|| **Status** |
+|---|---|
+|**Ubuntu 14.04** |[![Build Status](https://travis-ci.org/zchee/deoplete-clang.svg?branch=master)](https://travis-ci.org/zchee/deoplete-clang)|
+
 ```vim
 " deoplete-clang
 " libclang shared library path
