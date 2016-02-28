@@ -67,7 +67,8 @@ class Source(Base):
         if self.compilation_database:
             params = self.get_params(buf.name)
         else:
-            params = self.completion_flags
+            params = self.completion_flags + \
+                self.get_minimum_flags(context['filetype'])
             params.append('-I' + self.get_builtin_clang_header())
 
         complete = self.get_completion(
@@ -96,6 +97,24 @@ class Source(Base):
             if chunks.isKindTypedText():
                 return chunks.spelling
         return ""
+
+    def get_minimum_flags(self, filetype):
+        flags = ['-x']
+
+        if filetype == 'c':
+            std = self.vim.vars["deoplete#sources#clang#std#c"]
+            flags += ['c', '-std=' + std]
+        elif filetype == 'cpp':
+            std = self.vim.vars["deoplete#sources#clang#std#cpp"]
+            flags += ['c++', '-std=' + std]
+        elif filetype == 'objc':
+            std = self.vim.vars["deoplete#sources#clang#std#c"]
+            flags += ['c++', '-std=' + std, '-ObjC']
+        elif filetype == 'cpp':
+            std = self.vim.vars["deoplete#sources#clang#std#cpp"]
+            flags += ['c++', '-std=' + std, '-ObjC++']
+
+        return flags
 
     def get_builtin_clang_header(self):
         include_dir = self.clang_header

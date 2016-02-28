@@ -11,6 +11,14 @@ if !exists("g:deoplete#sources#clang#clang_header")
   let g:deoplete#sources#clang#clang_header = get(g:, 'deoplete#sources#clang#clang_header', '')
 endif
 
+if !exists("g:deoplete#sources#clang#std#c")
+  let g:deoplete#sources#clang#std#c = get(g:, 'deoplete#sources#clang#std#c', 'c11')
+endif
+
+if !exists("g:deoplete#sources#clang#std#cpp")
+  let g:deoplete#sources#clang#std#cpp = get(g:, 'deoplete#sources#clang#std#cpp', 'c++1z')
+endif
+
 if !exists("g:deoplete#sources#clang#flags")
   let g:deoplete#sources#clang#flags = get(g:, 'deoplete#sources#clang#flags', [])
 endif
