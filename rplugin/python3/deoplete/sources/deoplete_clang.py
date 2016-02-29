@@ -71,9 +71,14 @@ class Source(Base):
                 self.get_minimum_flags(context['filetype'])
             params.append('-I' + self.get_builtin_clang_header())
 
+        try:
+            go_buf = self.vim.vars['deoplete#sources#clang#buffer']
+        except Exception:
+            go_buf = ""
+
         complete = self.get_completion(
             buf.name, line, col,
-            self.get_current_buffer(buf),
+            [(buf.name, go_buf)],
             params)
         if complete is None:
             return []
