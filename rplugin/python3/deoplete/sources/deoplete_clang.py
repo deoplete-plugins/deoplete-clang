@@ -101,16 +101,18 @@ class Source(Base):
     def get_minimum_flags(self, filetype):
         flags = ['-x']
 
-        if filetype in ['c', 'objc']:
+        if filetype == 'c':
             std = self.vim.vars["deoplete#sources#clang#std#c"]
             flags += ['c', '-std=' + std]
-            if filetype == 'objc':
-                flags.append('-ObjC')
-        elif filetype in ['cpp', 'objcpp']:
+        elif filetype == 'cpp':
             std = self.vim.vars["deoplete#sources#clang#std#cpp"]
             flags += ['c++', '-std=' + std]
-            if filetype == 'objcpp':
-                flags.append('-ObjC++')
+        elif filetype == 'objc':
+            std = self.vim.vars["deoplete#sources#clang#std#objc"]
+            flags += ['objective-c', '-std=' + std, '-ObjC']
+        elif filetype == 'objcpp':
+            std = self.vim.vars["deoplete#sources#clang#std#objcpp"]
+            flags += ['objective-c++', '-std=' + std, '-ObjC++']
 
         return flags
 
