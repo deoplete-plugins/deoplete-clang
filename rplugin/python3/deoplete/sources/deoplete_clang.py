@@ -109,10 +109,10 @@ class Source(Base):
             flags += ['c++', '-std=' + std]
         elif filetype == 'objc':
             std = self.vim.vars["deoplete#sources#clang#std#objc"]
-            flags += ['objective-c', '-std=' + std, '-ObjC']
+            flags += ['objective-c', '-std=' + std]
         elif filetype == 'objcpp':
             std = self.vim.vars["deoplete#sources#clang#std#objcpp"]
-            flags += ['objective-c++', '-std=' + std, '-ObjC++']
+            flags += ['objective-c++', '-std=' + std]
 
         return flags
 
