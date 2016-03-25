@@ -5,8 +5,8 @@ include mk/color.mk
 # Snippets for debug and profiling
 include mk/debug_code.mk
 
-RPLUGIN_PATH := ./rplugin/python3/deoplete/sources/
-MODULE_NAME := deoplete_clang.py
+RPLUGIN_PATH := ./rplugin/python3/deoplete/sources
+MODULE_NAME := /deoplete_clang.py
 
 DEOPLETE_CLANG := ${RPLUGIN_PATH}${MODULE_NAME}
 CLANG_DATA := ${RPLUGIN_PATH}/deoplete_clang/clang_data.py
@@ -20,10 +20,10 @@ test: flake8
 lint: lint_modules flake8
 
 lint_modules:
-	pip3 install -U -r ./test/requirements.txt
+	@pip3 install -q -U -r ./tests/requirements.txt
 
 flake8:
-	flake8 -v --config=$(PWD)/.flake8 ${DEOPLETE_CLANG} ${HELPER} ${PROFILER} || true
+	@flake8 --config=$(PWD)/.flake8 ${DEOPLETE_CLANG} ${HELPER} ${PROFILER} || true
 
 autopep8: clean
 	autopep8 -i ${DEOPLETE_CLANG}
