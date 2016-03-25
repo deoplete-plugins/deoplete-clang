@@ -18,7 +18,7 @@ Fastetst, Fully asynchronous, Nonblocking user interface, Customizable source fo
 The Nextgen word completion.
 
 ### libclang-python3
-[zchee/libclang](https://github.com/zchee/libclang-python3)
+[zchee/libclang-python3](https://github.com/zchee/libclang-python3)
 
 Clang compiler bindings for python.  
 but llvm official bindings are Python2 only. It was ported to Python3.  
