@@ -27,15 +27,11 @@ class Source(Base):
                               r'[^. \t0-9]->\w*|'
                               r'[a-zA-Z_]\w*::\w*')
 
-        try:
-            self.library_path = \
-                self.vim.vars['deoplete#sources#clang#libclang_path']
-        except Exception:
-            return []
-        else:
+        self.library_path = \
+            self.vim.vars['deoplete#sources#clang#libclang_path']
+        if not cl.Config.loaded:
             cl.Config.set_library_file(self.library_path)
-
-        cl.Config.set_compatibility_check(False)
+            cl.Config.set_compatibility_check(False)
 
         self.clang_header = \
             self.vim.vars['deoplete#sources#clang#clang_header']
