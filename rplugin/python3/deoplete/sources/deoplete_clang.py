@@ -43,6 +43,14 @@ class Source(Base):
             self.vim.vars["deoplete#sources#clang#flags"]
         self.sort_algo = \
             self.vim.vars["deoplete#sources#clang#sort_algo"]
+        self.std_c = \
+            self.vim.vars["deoplete#sources#clang#std#c"]
+        self.std_cpp = \
+            self.vim.vars["deoplete#sources#clang#std#cpp"]
+        self.std_objc = \
+            self.vim.vars["deoplete#sources#clang#std#objc"]
+        self.std_objcpp = \
+            self.vim.vars["deoplete#sources#clang#std#objcpp"]
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']
@@ -102,17 +110,13 @@ class Source(Base):
         flags = ['-x']
 
         if filetype == 'c':
-            std = self.vim.vars["deoplete#sources#clang#std#c"]
-            flags += ['c', '-std=' + std]
+            flags += ['c', '-std=' + self.std_c]
         elif filetype == 'cpp':
-            std = self.vim.vars["deoplete#sources#clang#std#cpp"]
-            flags += ['c++', '-std=' + std]
+            flags += ['c++', '-std=' + self.std_cpp]
         elif filetype == 'objc':
-            std = self.vim.vars["deoplete#sources#clang#std#objc"]
-            flags += ['objective-c', '-std=' + std]
+            flags += ['objective-c', '-std=' + self.std_objc]
         elif filetype == 'objcpp':
-            std = self.vim.vars["deoplete#sources#clang#std#objcpp"]
-            flags += ['objective-c++', '-std=' + std]
+            flags += ['objective-c++', '-std=' + self.std_objcpp]
 
         return flags
 
