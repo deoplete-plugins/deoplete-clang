@@ -47,6 +47,8 @@ class Source(Base):
             self.vim.vars["deoplete#sources#clang#std#objc"]
         self.std_objcpp = \
             self.vim.vars["deoplete#sources#clang#std#objcpp"]
+        # self.debug_enabled = \
+        #     self.vim.vars["deoplete#sources#clang#debug"]
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']

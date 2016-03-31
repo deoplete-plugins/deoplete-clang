@@ -29,3 +29,6 @@ let g:deoplete#sources#clang#sort_algo =
 
 let g:deoplete#sources#clang#clang_complete_database =
       \ get(g:, 'deoplete#sources#clang#clang_complete_database', '')
+
+let g:deoplete#sources#clang#debug =
+      \ get(g:, 'deoplete#sources#clang#debug', 0)
