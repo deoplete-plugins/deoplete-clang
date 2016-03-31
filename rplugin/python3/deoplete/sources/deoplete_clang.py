@@ -52,7 +52,7 @@ class Source(Base):
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']
-        if clang_complete_database != '':
+        if clang_complete_database:
             self.compilation_database = \
                 cl.CompilationDatabase.fromDirectory(clang_complete_database)
         else:
