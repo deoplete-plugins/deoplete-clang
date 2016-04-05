@@ -29,9 +29,10 @@ class Source(Base):
 
         self.library_path = \
             self.vim.vars['deoplete#sources#clang#libclang_path']
-        if not cl.Config.loaded:
-            cl.Config.set_library_file(self.library_path)
-            cl.Config.set_compatibility_check(False)
+        if cl.Config.loaded:
+            cl.Config.loaded = False
+        cl.Config.set_library_file(self.library_path)
+        cl.Config.set_compatibility_check(False)
 
         self.clang_header = \
             self.vim.vars['deoplete#sources#clang#clang_header']
