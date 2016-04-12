@@ -7,7 +7,7 @@ from deoplete.util import load_external_module
 current = __file__
 
 load_external_module(current, 'clang')
-import clang.cindex as cl
+import clang.cindex as clang
 
 load_external_module(current, 'sources/deoplete_clang')
 from clang_data import index_h
@@ -53,13 +53,24 @@ class Source(Base):
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']
+
+        if clang.Config.loaded and \
+                not clang.Config.library_path == self.library_path:
+            self.debug('Reset clang.Config.loaded')
+            clang.Config.loaded = False
+            clang.Config.set_library_file(self.library_path)
+            clang.Config.set_compatibility_check(False)
+        else:
+            self.debug('not Reset')
+
         if clang_complete_database:
             self.compilation_database = \
-                cl.CompilationDatabase.fromDirectory(clang_complete_database)
+                clang.CompilationDatabase.fromDirectory(
+                    clang_complete_database)
         else:
             self.compilation_database = None
 
-        self.index = cl.Index.create()
+        self.index = clang.Index.create()
         # TODO(zchee): More elegant way
         self.tu_data, self.params, self.database = dict(), dict(), dict()
 
@@ -179,7 +190,7 @@ class Source(Base):
         return params
 
     def get_translation_unit(self, fname, args, buf):
-        # cl.TranslationUnit
+        # clang.TranslationUnit
         # PARSE_NONE = 0
         # PARSE_DETAILED_PROCESSING_RECORD = 1
         # PARSE_INCOMPLETE = 2
