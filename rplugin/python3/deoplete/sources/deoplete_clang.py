@@ -38,14 +38,12 @@ class Source(Base):
             self.vim.vars["deoplete#sources#clang#flags"]
         self.sort_algo = \
             self.vim.vars["deoplete#sources#clang#sort_algo"]
-        self.std_c = \
-            self.vim.vars["deoplete#sources#clang#std#c"]
-        self.std_cpp = \
-            self.vim.vars["deoplete#sources#clang#std#cpp"]
-        self.std_objc = \
-            self.vim.vars["deoplete#sources#clang#std#objc"]
-        self.std_objcpp = \
-            self.vim.vars["deoplete#sources#clang#std#objcpp"]
+        self.std = \
+            self.vim.vars["deoplete#sources#clang#std"]
+        self.std_c = self.std.get('c')
+        self.std_cpp = self.std.get('cpp')
+        self.std_objc = self.std.get('objc')
+        self.std_objcpp = self.std.get('objcpp')
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']

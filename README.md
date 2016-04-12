@@ -94,10 +94,7 @@ Plug 'zchee/deoplete-clang'
 |:-------------:|:-------:|:--------:|
 `g:deoplete#sources#clang#libclang_path` | `''` | **Yes**
 `g:deoplete#sources#clang#clang_header` | `''` | **Yes**
-`g:deoplete#sources#clang#std#c` | `c11` | No
-`g:deoplete#sources#clang#std#cpp` | `c++1z` | No
-`g:deoplete#sources#clang#std#objc` | `c11` | No
-`g:deoplete#sources#clang#std#objcpp` | `c++1z` | No
+`g:deoplete#sources#clang#std` | See this section | No
 `g:deoplete#sources#clang#flags` | See this section | No
 `g:deoplete#sources#clang#sort_algo` | `''` | No
 `g:deoplete#sources#clang#clang_complete_database` | `''` | No
@@ -172,16 +169,16 @@ e.g.,
     └── vtables_blacklist.txt
 ```
 
-### `g:deoplete#sources#clang#std#***`
+### `g:deoplete#sources#clang#std`
 |||
 |---|---|
 | **Required** | No |
-| **Type** | string |
+| **Type** | dict |
 | **C Default** | `c11` |
 | **C++ Default** | `c++1z` |
 | **Objective-C Default** | `c11` |
 | **Objective-C++ Default** | `c++1z` |
-| **Example** | `c99` |
+| **Example** | `{'c': 'c11', 'cpp': 'c++1z', 'objc': 'c11', 'objcpp': 'c++1z'}` |
 
 Each C family language standard version.  
 By default, use clang supported latest version.
