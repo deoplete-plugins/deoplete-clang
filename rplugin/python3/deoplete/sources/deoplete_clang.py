@@ -27,13 +27,11 @@ class Source(Base):
                               r'[^. \t0-9]->\w*|'
                               r'[a-zA-Z_]\w*::\w*')
 
+        self.debug_enabled = \
+            self.vim.vars["deoplete#sources#clang#debug"]
+
         self.library_path = \
             self.vim.vars['deoplete#sources#clang#libclang_path']
-        if cl.Config.loaded:
-            cl.Config.loaded = False
-        cl.Config.set_library_file(self.library_path)
-        cl.Config.set_compatibility_check(False)
-
         self.clang_header = \
             self.vim.vars['deoplete#sources#clang#clang_header']
         self.completion_flags = \
@@ -48,20 +46,15 @@ class Source(Base):
             self.vim.vars["deoplete#sources#clang#std#objc"]
         self.std_objcpp = \
             self.vim.vars["deoplete#sources#clang#std#objcpp"]
-        # self.debug_enabled = \
-        #     self.vim.vars["deoplete#sources#clang#debug"]
 
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']
 
         if clang.Config.loaded and \
-                not clang.Config.library_path == self.library_path:
-            self.debug('Reset clang.Config.loaded')
+                clang.Config.library_path != self.library_path:
             clang.Config.loaded = False
             clang.Config.set_library_file(self.library_path)
             clang.Config.set_compatibility_check(False)
-        else:
-            self.debug('not Reset')
 
         if clang_complete_database:
             self.compilation_database = \
