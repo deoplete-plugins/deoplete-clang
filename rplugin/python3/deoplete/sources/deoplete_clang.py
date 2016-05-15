@@ -48,7 +48,7 @@ class Source(Base):
         clang_complete_database = \
             self.vim.vars['deoplete#sources#clang#clang_complete_database']
 
-        if clang.Config.loaded and \
+        if not clang.Config.loaded or \
                 clang.Config.library_path != self.library_path:
             clang.Config.loaded = False
             clang.Config.set_library_file(self.library_path)
