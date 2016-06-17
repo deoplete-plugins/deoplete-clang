@@ -76,7 +76,7 @@ class Source(Base):
             if m is not None:
                 self.completion_flags = flags[m.end():].split()
             else :
-                m = re.match(r'^comp?ilation_database\s*=\s*', flags)
+                m = re.match(r'^compilation_database\s*=\s*', flags)
                 if m is not None:
                     path3 = flags[m.end():]
                     if path3[0] == '"' and path3[-1] == '"':
