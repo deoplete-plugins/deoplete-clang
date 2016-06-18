@@ -40,6 +40,13 @@ class Source(Base):
             self.vim.vars["deoplete#sources#clang#sort_algo"]
         self.std = \
             self.vim.vars["deoplete#sources#clang#std"]
+
+        self.default_filename = \
+            self.vim.vars["deoplete#sources#clang#default_file"]
+
+        self.test_extensions = \
+            self.vim.vars["deoplete#sources#clang#test_extensions"]
+
         self.std_c = self.std.get('c')
         self.std_cpp = self.std.get('cpp')
         self.std_objc = self.std.get('objc')
@@ -69,14 +76,14 @@ class Source(Base):
             if m is not None:
                 self.completion_flags = flags[m.end():].split()
             else :
-                m = re.match(r'^comilation_database\s*=\s*', flags)
+                m = re.match(r'^compilation_database\s*=\s*', flags)
                 if m is not None:
                     path3 = flags[m.end():]
                     if path3[0] == '"' and path3[-1] == '"':
                         path3 = path3[1:-1]
                     clang_complete_database = path+path3
 
-        if clang_complete_database:
+        if clang_complete_database and os.path.isdir(clang_complete_database):
             self.compilation_database = \
                 clang.CompilationDatabase.fromDirectory(
                     clang_complete_database)
@@ -147,9 +154,10 @@ class Source(Base):
         include_dir = self.clang_header
         if not include_dir:
             return ''
-        versions = os.listdir(include_dir)
+        versions = sorted([d for d in os.listdir(include_dir)
+                           if os.path.isdir(os.path.join(include_dir, d))])
+
         # Use latest clang version
-        sorted(versions)
         latest = versions[-1]
 
         return os.path.join(include_dir, latest, 'include')
@@ -168,22 +176,57 @@ class Source(Base):
 
         header = self.get_builtin_clang_header()
         if header:
-            params.append('-I' + header)
+            param = '-I' + header
+
+            if not param in params:
+                params.append(param)
 
         self.params[fname] = params
         return params
+
+    def get_commands_for_file(self, fname):
+        assert bool(self.compilation_database)
+
+        get_cmds = self.compilation_database.getCompileCommands
+        commands = get_cmds(fname)
+
+        if commands is not None:
+            return (fname, commands)
+
+        noext_name, extension = os.path.splitext(fname)
+
+        test_for = self.test_extensions.get(extension, None)
+
+        if test_for is not None:
+            for test_ext in test_for:
+                test_fname = noext_name + test_ext
+                commands = get_cmds(test_fname)
+
+                if commands is not None:
+                    return (test_fname, commands)
+
+        if self.default_filename:
+            test_fname = self.default_filename
+
+            commands = get_cmds(test_fname)
+            if commands is not None:
+                return (test_fname, commands)
+
+        return None
 
     def get_compilation_database(self, fname):
         params = self.completion_flags
 
         if self.compilation_database:
-            cmds = self.compilation_database.getCompileCommands(fname)[0]
-            if cmds is not None:
+            used_fname, cmds = self.get_commands_for_file(fname)
+
+            if cmds is not None and cmds[0] is not None:
+                cmds = cmds[0]
                 cwd = cmds.directory
                 skip = 1
                 for arg in cmds.arguments:
                     if skip or arg in \
-                            ['-c', fname,
+                            ['-c', used_fname,
                              os.path.realpath(os.path.join(cwd, arg))]:
                         skip = 0
                         continue

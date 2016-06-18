@@ -24,3 +24,10 @@ let g:deoplete#sources#clang#clang_complete_database =
 
 let g:deoplete#sources#clang#debug =
       \ get(g:, 'deoplete#sources#clang#debug', 0)
+
+let g:deoplete#sources#clang#default_file =
+      \ get(g:, 'deoplete#sources#clang#default_file', '')
+
+let g:deoplete#sources#clang#test_extensions =
+      \ get(g:, 'deoplete#sources#clang#test_extensions',
+      \   {'.h': ['.c', '.cpp', '.m', '.mm'], '.hpp': ['.cpp']})
