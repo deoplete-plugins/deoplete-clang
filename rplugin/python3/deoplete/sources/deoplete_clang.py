@@ -71,7 +71,7 @@ class Source(Base):
         path2 = path+"/.clang"
         if os.path.isfile(path2):
             flags_file = open(path2)
-            flags = flags_file.read()
+            flags = flags_file.read().rstrip()
             m = re.match(r'^flags\s*=\s*', flags)
             if m is not None:
                 self.completion_flags = flags[m.end():].split()
@@ -81,7 +81,7 @@ class Source(Base):
                     path3 = flags[m.end():]
                     if path3[0] == '"' and path3[-1] == '"':
                         path3 = path3[1:-1]
-                    clang_complete_database = path+path3
+                    clang_complete_database = path+"/"+path3
 
         if clang_complete_database and os.path.isdir(clang_complete_database):
             self.compilation_database = \
