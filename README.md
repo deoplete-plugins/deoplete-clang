@@ -259,3 +259,10 @@ Please set only if you really need support compilation database.
 
 I'm planning more parse speed rewrite in Go.  
 Just moments.
+
+## FAQ
+
+### deoplete-clang does not support header names completion?
+
+It is not supported.  You should use neoinclude plugin instead.
+https://github.com/Shougo/neoinclude.vim
