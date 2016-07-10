@@ -27,33 +27,27 @@ class Source(Base):
                               r'[^. \t0-9]->\w*|'
                               r'[a-zA-Z_]\w*::\w*')
 
-        self.debug_enabled = \
-            self.vim.vars["deoplete#sources#clang#debug"]
+    def on_init(self, context):
+        vars = context['vars']
 
-        self.library_path = \
-            self.vim.vars['deoplete#sources#clang#libclang_path']
-        self.clang_header = \
-            self.vim.vars['deoplete#sources#clang#clang_header']
-        self.completion_flags = \
-            self.vim.vars["deoplete#sources#clang#flags"]
-        self.sort_algo = \
-            self.vim.vars["deoplete#sources#clang#sort_algo"]
-        self.std = \
-            self.vim.vars["deoplete#sources#clang#std"]
-
-        self.default_filename = \
-            self.vim.vars["deoplete#sources#clang#default_file"]
-
-        self.test_extensions = \
-            self.vim.vars["deoplete#sources#clang#test_extensions"]
+        self.debug_enabled = vars['deoplete#sources#clang#debug']
+        self.library_path = vars['deoplete#sources#clang#libclang_path']
+        self.clang_header = vars['deoplete#sources#clang#clang_header']
+        self.completion_flags = vars['deoplete#sources#clang#flags']
+        self.sort_algo = vars['deoplete#sources#clang#sort_algo']
+        self.std = vars['deoplete#sources#clang#std']
+        self.default_filename = vars[
+            'deoplete#sources#clang#default_file']
+        self.test_extensions = vars[
+            'deoplete#sources#clang#test_extensions']
 
         self.std_c = self.std.get('c')
         self.std_cpp = self.std.get('cpp')
         self.std_objc = self.std.get('objc')
         self.std_objcpp = self.std.get('objcpp')
 
-        clang_complete_database = \
-            self.vim.vars['deoplete#sources#clang#clang_complete_database']
+        clang_complete_database = vars[
+            'deoplete#sources#clang#clang_complete_database']
 
         if not clang.Config.loaded or \
                 clang.Config.library_path != self.library_path:
@@ -61,7 +55,7 @@ class Source(Base):
             clang.Config.set_library_file(self.library_path)
             clang.Config.set_compatibility_check(False)
 
-        #search for .clang file
+        # search for .clang file
         path = os.path.dirname(self.vim.current.buffer.name)
         while not os.path.isfile(path + "/.clang"):
             if path == "/":
@@ -75,7 +69,7 @@ class Source(Base):
             m = re.match(r'^flags\s*=\s*', flags)
             if m is not None:
                 self.completion_flags = flags[m.end():].split()
-            else :
+            else:
                 m = re.match(r'^compilation_database\s*=\s*', flags)
                 if m is not None:
                     path3 = flags[m.end():]
