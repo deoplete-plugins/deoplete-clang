@@ -88,13 +88,19 @@ class Source(Base):
         # TODO(zchee): More elegant way
         self.tu_data, self.params, self.database = dict(), dict(), dict()
 
+    def on_event(self, context):
+        # Note: Dummy call to make cache
+        self.gather_candidates(context)
+
     def get_complete_position(self, context):
         m = re.search(r'\w*$', context['input'])
         return m.start() if m else -1
 
     def gather_candidates(self, context):
         line = context['position'][1]
-        col = (context['complete_position'] + 1)
+        col = (context['complete_position']
+               if 'complete_position' in context
+               else context['position'][2]) + 1
         buf = self.vim.current.buffer
         if self.compilation_database:
             params = self.get_params(buf.name)
