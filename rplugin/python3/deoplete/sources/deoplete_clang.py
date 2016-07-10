@@ -111,10 +111,12 @@ class Source(Base):
             return []
 
         if self.sort_algo == 'priority':
-            get_priority = lambda x: x.string.priority
+            def get_priority(x):
+                return x.string.priority
             results = sorted(complete.results, key=get_priority)
         elif self.sort_algo == 'alphabetical':
-            get_abbrevation = lambda x: self.get_abbr(x.string).lower()
+            def get_abbrevation(x):
+                return self.get_abbr(x.string).lower()
             results = sorted(complete.results, key=get_abbrevation)
         else:
             results = complete.results
@@ -172,7 +174,7 @@ class Source(Base):
         if header:
             param = '-I' + header
 
-            if not param in params:
+            if param not in params:
                 params.append(param)
 
         self.params[fname] = params
