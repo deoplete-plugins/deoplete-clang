@@ -30,24 +30,53 @@ class Source(Base):
     def on_init(self, context):
         vars = context['vars']
 
-        self.debug_enabled = vars['deoplete#sources#clang#debug']
-        self.library_path = vars['deoplete#sources#clang#libclang_path']
-        self.clang_header = vars['deoplete#sources#clang#clang_header']
-        self.completion_flags = vars['deoplete#sources#clang#flags']
-        self.sort_algo = vars['deoplete#sources#clang#sort_algo']
-        self.std = vars['deoplete#sources#clang#std']
-        self.default_filename = vars[
-            'deoplete#sources#clang#default_file']
-        self.test_extensions = vars[
-            'deoplete#sources#clang#test_extensions']
+        self.debug_enabled = vars.get(
+            'deoplete#sources#clang#debug',
+            False
+        )
+        self.library_path = vars.get(
+            'deoplete#sources#clang#libclang_path',
+            None
+        )
+        self.clang_header = vars.get(
+            'deoplete#sources#clang#clang_header',
+            None
+        )
+        self.completion_flags = vars.get(
+            'deoplete#sources#clang#flags',
+            ''
+        )
+        self.sort_algo = vars.get(
+            'deoplete#sources#clang#sort_algo',
+            ''
+        )
+        self.std = vars.get(
+            'deoplete#sources#clang#std',
+            {
+                'c': 'c11',
+                'cpp': 'c++1z',
+                'objc': 'c11',
+                'objcpp': 'c++1z'
+            }
+        )
+        self.default_filename = vars.get(
+            'deoplete#sources#clang#default_file',
+            ''
+        )
+        self.test_extensions = vars.get(
+            'deoplete#sources#clang#test_extensions',
+            ''
+        )
 
-        self.std_c = self.std.get('c')
-        self.std_cpp = self.std.get('cpp')
-        self.std_objc = self.std.get('objc')
-        self.std_objcpp = self.std.get('objcpp')
+        self.std_c = self.std.get('c', 'c11')
+        self.std_cpp = self.std.get('cpp', 'c++1z')
+        self.std_objc = self.std.get('objc', 'c11')
+        self.std_objcpp = self.std.get('objcpp', 'c++1z')
 
-        clang_complete_database = vars[
-            'deoplete#sources#clang#clang_complete_database']
+        clang_complete_database = vars.get(
+            'deoplete#sources#clang#clang_complete_database',
+            ''
+       )
 
         if not clang.Config.loaded or \
                 clang.Config.library_path != self.library_path:
@@ -62,7 +91,7 @@ class Source(Base):
                 break
             path = os.path.realpath(path + "/..")
 
-        path2 = path+"/.clang"
+        path2 = path + "/.clang"
         if os.path.isfile(path2):
             flags_file = open(path2)
             flags = flags_file.read().rstrip()
