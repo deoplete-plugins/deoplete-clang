@@ -90,7 +90,11 @@ class Source(Base):
 
     def on_event(self, context):
         # Note: Dummy call to make cache
-        self.gather_candidates(context)
+        try:
+            self.gather_candidates(context)
+        except:
+            # Ignore the error
+            pass
 
     def get_complete_position(self, context):
         m = re.search(r'\w*$', context['input'])
