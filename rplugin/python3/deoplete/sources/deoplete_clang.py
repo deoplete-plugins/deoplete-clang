@@ -36,11 +36,11 @@ class Source(Base):
         )
         self.library_path = vars.get(
             'deoplete#sources#clang#libclang_path',
-            None
+            ''
         )
         self.clang_header = vars.get(
             'deoplete#sources#clang#clang_header',
-            None
+            ''
         )
         self.completion_flags = vars.get(
             'deoplete#sources#clang#flags',
