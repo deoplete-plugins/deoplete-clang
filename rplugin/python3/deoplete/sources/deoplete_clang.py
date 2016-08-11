@@ -44,7 +44,7 @@ class Source(Base):
         )
         self.completion_flags = vars.get(
             'deoplete#sources#clang#flags',
-            ''
+            []
         )
         self.sort_algo = vars.get(
             'deoplete#sources#clang#sort_algo',
