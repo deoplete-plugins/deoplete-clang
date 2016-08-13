@@ -7,25 +7,25 @@ C/C++/Objective-C/Objective-C++ source for [deoplete.nvim](https://github.com/Sh
 
 
 ## Overview
-Asynchronous C/C++/Objective-C/Objective-C++ completion for Neovim.  
-Using,
+Deoplete-clag offers asynchronous completion of code written in C, C++,
+Objective-C and Objective-C++ inside of Neovim. It is built upon the following
+tools:
 
 ### deoplete.nvim
 [Shougo/deoplete.nvim](https://github.com/Shougo/deoplete.nvim)
 
-Dark powered asynchronous completion framework for neovim.  
-Fastetst, Fully asynchronous, Nonblocking user interface, Customizable source for each languages, and more.  
-The Nextgen word completion.
+The *dark powered asynchronous completion framework* for neovim.  It offers a
+fast, fully asynchronous, nonblocking user interface, customizable sources for
+each languages, and more.  The Next generation of word completion.
 
 ### libclang-python3
 [zchee/libclang-python3](https://github.com/zchee/libclang-python3)
 
-Clang compiler bindings for python.  
-but llvm official bindings are Python2 only. It was ported to Python3.  
-Original author is @Anteru. I was fork it, and follow the latest of llvm clang.
+A Python 3 port of the official clang compiler bindings for Python. The
+original author is @Anteru, I forked it and follow the latest of llvm clang.
 
 
-## Required
+## Requirements
 
 ### Neovim and neovim/python-client
 https://github.com/neovim/neovim  
@@ -42,13 +42,13 @@ https://github.com/apple/swift-clang
 ## How to install
 
 ### 1. Install Neovim
-See Neovim wiki.
+See the Neovim wiki.
 
 - [Installing Neovim](https://github.com/neovim/neovim/wiki/Installing-Neovim)
 - [Following HEAD](https://github.com/neovim/neovim/wiki/Following-HEAD)
 - [Building](https://github.com/neovim/neovim/wiki/Building-Neovim)
 
-### 2. Install neovim/python-client
+### 2. Install the neovim/python-client
 Neovim remonte client for python.  
 See https://github.com/neovim/python-client
 
@@ -58,19 +58,19 @@ pip3 install --upgrade neovim
 ```
 
 ### 3. Install libclang and clang headers
-for linux, e.g. apt family,
+For GNU/Linux, e.g. apt family,
 
 ```bash
 apt-get install clang
 ```
 
-for OS X, Homebrew way
+for macOS, Homebrew way
 ```bash
 brew install llvm --with-clang
 ```
-but not tested. recommend is build from source.  
-See http://clang.llvm.org/get_started.html  
-or try build-llvm script. Need `cmake`, `ninja` or `Xcode`  
+This has not been tested, it is recommended to build from source.  See
+http://clang.llvm.org/get_started.html  or try the build-llvm script. You will
+need `cmake`, `ninja` or `Xcode`  
 
 [Build llvm for OS X](https://gist.github.com/zchee/740e99acd893afeeae6d)
 
@@ -107,14 +107,14 @@ Plug 'zchee/deoplete-clang'
 | **Default** | - |
 | **Example** | `path/to/lib/libclang.so` |
 
-libclang shared object (dynamic library) file path.  
-In linux, `libclang.so`. In OS X, `libclang.dylib`.
+The libclang shared object (dynamic library) file path. On GNU/Linux the file
+name is `libclang.so`. On macOS it is `libclang.dylib`.
 
-Find commands,
+If you have trouble locating the library you can use the `find` command,
 ```bash
-# In linux
-(sudo) find / -name libclang.so
-# In OS X
+# On GNU/Linux
+[sudo] find / -name libclang.so
+# On macOS
 mdfind -name libclang.dylib
 ```
 
@@ -126,11 +126,11 @@ mdfind -name libclang.dylib
 | **Default** | - |
 | **Example** | `path/to/lib/clang` |
 
-clang built-in include header directory path.  
-**Not `clang-c`**. and **not required clang version**.  
-deoplete-clang always use latest clang version.
+The clang built-in include header directory path; **not `clang-c`**, and **not
+the required clang version**. Deoplete-clang always use the latest clang
+version.
 
-e.g.,
+Example:
 
 ```bash
 /opt/llvm/lib/clang
@@ -180,8 +180,8 @@ e.g.,
 | **Objective-C++ Default** | `c++1z` |
 | **Example** | `{'c': 'c11', 'cpp': 'c++1z', 'objc': 'c11', 'objcpp': 'c++1z'}` |
 
-Each C family language standard version.  
-By default, use clang supported latest version.
+The standard version for each of the C family languages. By default, use the
+lastest version supported by clang.
 
 ### `g:deoplete#sources#clang#flags`
 |||
@@ -194,10 +194,11 @@ By default, use clang supported latest version.
 | **Objective-C++ Default** | `['-x', 'objective-c++']` |
 | **Example** | `["-fblocks",]` |
 
-`C(XX)FLAGS` for generate completion word.  
-Setting value **other than default**. Not needs `-x c` or etc.
+`C(XX)FLAGS` for generating completions. Setting value **other than default**.
+Does not need `-x c` or similar.
 
-If you want to know default clang build flags, try
+If you want to know the default clang build flags your of your installation you
+can try
 
 ```bash
 # C
@@ -210,7 +211,7 @@ echo | clang -v -E -x objective-c -
 echo | clang -v -E -x objective-c++ -
 ```
 
-e.g. In OS X,
+For example, on macOS the settings would correspond to:
 
 ```vim
 let g:deoplete#sources#clang#flags = [
@@ -232,11 +233,11 @@ let g:deoplete#sources#clang#flags = [
 | **Default** | `''` |
 | **Example** | `priority` or `alphabetical` |
 
-libclang completion result sort algorism. Available value are `priority` or `alphabetical`.  
+The sorting algorithm for libclang completion results. Available values are
+`priority` or `alphabetical`.  
 
-By defalut(`''`), use deoplete.nvim sort algorism.  
-`priority`, Sort by libclang determine priority.  
-`alphabetical`, Sort by alphabetical order.
+By defalut (`''`) use the deoplete.nvim sort algorithm.  `priority` sorts the
+way libclang determines priority, `alphabetical` sorts by alphabetical order.
 
 
 ### `g:deoplete#sources#clang#clang_complete_database`
@@ -247,22 +248,23 @@ By defalut(`''`), use deoplete.nvim sort algorism.
 | **Default** | `''` |
 | **Example** | `/path/to/neovim/build` |
 
-Support Clang JSON Compilation Database Format Specification.  
-See http://clang.llvm.org/docs/JSONCompilationDatabase.html.
+Support a clang JSON compilation database format specification; see
+http://clang.llvm.org/docs/JSONCompilationDatabase.html for more information.
 
-Setting value are **must be exists `compile_commands.json` directory**.  
+The setting value **must be an existing `compile_commands.json` directory**.
 This setting is **optional**.
 
-If set it, use instead of `g:deoplete#sources#clang#flags`.  
-but, Currently parse `compile_commands.json` will take time.  
-Please set only if you really need support compilation database.
+When this setting is used the compilation database file will take precedence
+over the `g:deoplete#sources#clang#flags` setting. Parsing the compilation
+database file will take some time, so please on use this setting if you really
+need to support a compilation database.
 
-I'm planning more parse speed rewrite in Go.  
-Just moments.
+I'm planning the rewrite the parser in Go for faster parsing in the future.
+
 
 ## FAQ
 
 ### deoplete-clang does not support header names completion?
 
-It is not supported.  You should use neoinclude plugin instead.
+This is not supported. You should use the neoinclude plugin instead:
 https://github.com/Shougo/neoinclude.vim
