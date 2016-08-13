@@ -262,6 +262,29 @@ need to support a compilation database.
 I'm planning the rewrite the parser in Go for faster parsing in the future.
 
 
+## Project-specific settings
+
+Deoplete-clang supports compiler-flags local to individual projects. It will
+search the current working directory for a `.clang` file; if no such file is
+found it will try searching the parent directory. The format of the `.clang`
+file is either
+
+```
+flags = <flags>
+```
+
+or
+
+```
+compilation_database = "<path to compilation_database>"
+```
+
+The former requires all compiler flags to be written on one line. The format of
+the latter requires the path (relative to the `.clang` file) to a clang JSON
+compilation database format specification as described here:
+http://clang.llvm.org/docs/JSONCompilationDatabase.html
+
+
 ## FAQ
 
 ### deoplete-clang does not support header names completion?
