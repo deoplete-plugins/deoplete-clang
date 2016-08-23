@@ -104,7 +104,7 @@ class Source(Base):
                     path3 = flags[m.end():]
                     if path3[0] == '"' and path3[-1] == '"':
                         path3 = path3[1:-1]
-                    if path3[0] == '/': # absolute path
+                    if os.path.isabs(path3):
                         clang_complete_database = path3
                     else:
                         clang_complete_database = path+"/"+path3
