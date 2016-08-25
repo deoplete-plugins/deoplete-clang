@@ -104,7 +104,10 @@ class Source(Base):
                     path3 = flags[m.end():]
                     if path3[0] == '"' and path3[-1] == '"':
                         path3 = path3[1:-1]
-                    clang_complete_database = path+"/"+path3
+                    if os.path.isabs(path3):
+                        clang_complete_database = path3
+                    else:
+                        clang_complete_database = path+"/"+path3
 
         if clang_complete_database and os.path.isdir(clang_complete_database):
             self.compilation_database = \
