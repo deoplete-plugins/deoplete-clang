@@ -20,7 +20,7 @@ class Source(Base):
 
         self.name = 'clang'
         self.mark = '[clang]'
-        self.filetypes = ['c', 'cpp', 'objc', 'objcpp']
+        self.filetypes = ['c', 'cpp', 'objc', 'objcpp', 'cuda']
         self.rank = 500
         # TODO(zchee): not need "r'[a-zA-Z_]\w*::\w*'" in C language
         self.input_pattern = (r'[^. \t0-9]\.\w*|'
