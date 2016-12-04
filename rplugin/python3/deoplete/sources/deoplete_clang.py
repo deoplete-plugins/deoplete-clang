@@ -65,7 +65,7 @@ class Source(Base):
         )
         self.test_extensions = vars.get(
             'deoplete#sources#clang#test_extensions',
-            ''
+            {'.h': ['.c', '.cpp', '.m', '.mm'], '.hpp': ['.cpp']}
         )
 
         self.std_c = self.std.get('c', 'c11')
