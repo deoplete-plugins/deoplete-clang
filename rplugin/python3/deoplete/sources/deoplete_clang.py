@@ -250,7 +250,7 @@ class Source(Base):
             if commands is not None:
                 return (test_fname, commands)
 
-        return None
+        return (None, None)
 
     def get_compilation_database(self, fname):
         params = self.completion_flags
