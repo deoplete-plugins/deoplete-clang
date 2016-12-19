@@ -263,9 +263,13 @@ class Source(Base):
                 cwd = cmds.directory
                 skip = 1
                 for arg in cmds.arguments:
-                    if skip or arg in \
+                    full_path = ''
+                    if not os.path.isabs(arg[0]):
+                        full_path = os.path.realpath(os.path.join(cwd, arg))
+                    if skip or full_path == used_fname or arg in \
                             ['-c', used_fname,
-                             os.path.realpath(os.path.join(cwd, arg))]:
+                             os.path.basename(used_fname),
+                             full_path]:
                         skip = 0
                         continue
                     elif arg == '-o':
