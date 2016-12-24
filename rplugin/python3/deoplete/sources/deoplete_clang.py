@@ -318,7 +318,7 @@ class Source(Base):
             tu = self.get_translation_unit(fname, args, buf)
 
         return tu.codeComplete(fname, line, column, buf,
-                               include_macros=False,
+                               include_macros=True,
                                include_code_patterns=False,
                                include_brief_comments=False)
 
