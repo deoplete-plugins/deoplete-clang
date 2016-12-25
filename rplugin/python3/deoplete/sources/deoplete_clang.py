@@ -319,7 +319,7 @@ class Source(Base):
 
         return tu.codeComplete(fname, line, column, buf,
                                include_macros=True,
-                               include_code_patterns=False,
+                               include_code_patterns=True,
                                include_brief_comments=False)
 
     def parse_candidates(self, result):
