@@ -318,8 +318,8 @@ class Source(Base):
             tu = self.get_translation_unit(fname, args, buf)
 
         return tu.codeComplete(fname, line, column, buf,
-                               include_macros=False,
-                               include_code_patterns=False,
+                               include_macros=True,
+                               include_code_patterns=True,
                                include_brief_comments=False)
 
     def parse_candidates(self, result):
