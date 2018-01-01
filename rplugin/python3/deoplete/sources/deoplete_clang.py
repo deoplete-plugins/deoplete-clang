@@ -121,18 +121,21 @@ class Source(Base):
         self.tu_data, self.params, self.database = dict(), dict(), dict()
 
     def on_event(self, context):
-        # Note: Dummy call to make cache
-        try:
-            self.gather_candidates(context)
-        except:
-            # Ignore the error
-            pass
+            try:
+                if context["event"] == "BufWritePost":
+                    self.gather_candidates(context, refresh=True)
+                else:
+                    # Note: Dummy call to make cache
+                    self.gather_candidates(context)
+            except:
+                # Ignore the error
+                pass
 
     def get_complete_position(self, context):
         m = re.search(r'\w*$', context['input'])
         return m.start() if m else -1
 
-    def gather_candidates(self, context):
+    def gather_candidates(self, context, refresh=False):
         line = context['position'][1]
         col = (context['complete_position']
                if 'complete_position' in context
@@ -148,7 +151,7 @@ class Source(Base):
         complete = self.get_completion(
             buf.name, line, col,
             self.get_current_buffer(buf),
-            params)
+            params, refresh)
         if complete is None:
             return []
 
@@ -311,9 +314,14 @@ class Source(Base):
 
         return tu
 
-    def get_completion(self, fname, line, column, buf, args):
+    def get_completion(self, fname, line, column, buf, args, refresh=False):
         if fname in self.tu_data:
-            tu = self.tu_data[fname]
+            if refresh:
+                tu = self.tu_data[fname]
+                tu.reparse(buf)
+                self.tu_data[fname] = tu
+            else:
+                tu = self.tu_data[fname]
         else:
             tu = self.get_translation_unit(fname, args, buf)
 
