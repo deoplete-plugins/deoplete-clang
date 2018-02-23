@@ -146,7 +146,9 @@ class Source(Base):
         else:
             params = self.completion_flags + \
                 self.get_minimum_flags(context['filetype'])
-            params.append('-I' + self.get_builtin_clang_header())
+            header = self.get_builtin_clang_header()
+            if header:
+                params.append('-I' + header)
 
         complete = self.get_completion(
             buf.name, line, col,
