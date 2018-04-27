@@ -86,10 +86,11 @@ class Source(Base):
 
         # search for .clang file
         path = os.path.dirname(self.vim.current.buffer.name)
-        while not os.path.isfile(path + "/.clang"):
-            if path == "/":
+        while not os.path.isfile(os.path.join(path, '.clang')):
+            parent = os.path.dirname(path)
+            if path == parent:
                 break
-            path = os.path.realpath(path + "/..")
+            path = parent
 
         path2 = path + "/.clang"
         if os.path.isfile(path2):
