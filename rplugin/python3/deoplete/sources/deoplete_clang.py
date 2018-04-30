@@ -76,7 +76,7 @@ class Source(Base):
         clang_complete_database = vars.get(
             'deoplete#sources#clang#clang_complete_database',
             ''
-       )
+        )
 
         if not clang.Config.loaded or \
                 clang.Config.library_path != self.library_path:
@@ -86,10 +86,11 @@ class Source(Base):
 
         # search for .clang file
         path = os.path.dirname(self.vim.current.buffer.name)
-        while not os.path.isfile(path + "/.clang"):
-            if path == "/":
+        while not os.path.isfile(os.path.join(path, '.clang')):
+            parent = os.path.dirname(path)
+            if path == parent:
                 break
-            path = os.path.realpath(path + "/..")
+            path = parent
 
         path2 = path + "/.clang"
         if os.path.isfile(path2):
@@ -127,7 +128,7 @@ class Source(Base):
                 else:
                     # Note: Dummy call to make cache
                     self.gather_candidates(context)
-            except:
+            except Exception:
                 # Ignore the error
                 pass
 
