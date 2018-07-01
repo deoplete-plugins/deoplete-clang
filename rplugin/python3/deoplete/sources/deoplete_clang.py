@@ -23,9 +23,15 @@ class Source(Base):
         self.filetypes = ['c', 'cpp', 'objc', 'objcpp', 'cuda']
         self.rank = 500
         # TODO(zchee): not need "r'[a-zA-Z_]\w*::\w*'" in C language
+
+        # With the ObjC syntax, e.g. `[[Obj foo] bar]`, show completions
+        # when typing <space> after either `Obj` or
+        # `foo]`
+        # TODO(ptzz): not need "r'\[.*\]*\s'" in languages other than ObjC
         self.input_pattern = (r'[^. \t0-9]\.\w*|'
                               r'[^. \t0-9]->\w*|'
-                              r'[a-zA-Z_]\w*::\w*')
+                              r'[a-zA-Z_]\w*::\w*|'
+                              r'\[.*\]*\s')
 
     def on_init(self, context):
         vars = context['vars']
