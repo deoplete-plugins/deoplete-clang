@@ -294,9 +294,10 @@ or
 compilation_database = "<path to compilation_database>"
 ```
 
-The former requires all compiler flags to be written on one line.  The format of
-the latter requires the path (relative to the `.clang` file) to a clang JSON
-compilation database format specification as described here:
+The former requires all compiler flags to be written on one line.  For example:
+`flags = -I/path/to/include1 -I/path/to/include2`.  The format of the latter
+requires the path (relative to the `.clang` file) to a clang JSON compilation
+database format specification as described here:
 http://clang.llvm.org/docs/JSONCompilationDatabase.html
 
 ## FAQ
