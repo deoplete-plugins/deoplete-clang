@@ -118,7 +118,9 @@ Plug 'zchee/deoplete-clang'
 | **Example** | `path/to/lib/libclang.so` |
 
 The libclang shared object (dynamic library) file path.  On GNU/Linux the file
-name is `libclang.so`.  On macOS it is `libclang.dylib`.
+name is `libclang.so`.  On macOS it is `libclang.dylib`. If you cannot find
+file `libclang.so` use `libclang.so.1` instead. `libclang.so` is only availible if
+`libclang-dev` is installed.
 
 If you have trouble locating the library you can use the `find` command,
 
