@@ -107,6 +107,7 @@ Plug 'zchee/deoplete-clang'
 `g:deoplete#sources#clang#flags` | See this section | No
 `g:deoplete#sources#clang#sort_algo` | `''` | No
 `g:deoplete#sources#clang#clang_complete_database` | `''` | No
+`g:deoplete#sources#clang#include_default_arguments` | `False` | No
 
 ### `g:deoplete#sources#clang#libclang_path`
 
@@ -278,6 +279,17 @@ database file will take some time, so please on use this setting if you really
 need to support a compilation database.
 
 I'm planning the rewrite the parser in Go for faster parsing in the future.
+
+### `g:deoplete#sources#clang#include_default_arguments`
+
+|||
+|---|---|
+| **Required** | No |
+| **Type** | bool |
+| **Default** | `False` |
+| **Example** | `True` or `False` |
+
+Include default arguments in function signatures.
 
 ## Project-specific settings
 
