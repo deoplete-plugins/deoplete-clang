@@ -73,6 +73,10 @@ class Source(Base):
             'deoplete#sources#clang#test_extensions',
             {'.h': ['.c', '.cpp', '.m', '.mm'], '.hpp': ['.cpp']}
         )
+        self.include_default_arguments = bool(vars.get(
+            'deoplete#sources#clang#include_default_arguments',
+            False
+        ))
 
         self.std_c = self.std.get('c', 'c11')
         self.std_cpp = self.std.get('cpp', 'c++1z')
@@ -345,18 +349,30 @@ class Source(Base):
         word = ""
         placeholder = ""
 
-        for chunk in [x for x in result.string if x.spelling]:
+        for chunk in result.string:
             chunk_spelling = chunk.spelling
 
-            if chunk.isKindTypedText():
-                word += chunk_spelling
-                placeholder += chunk_spelling
-                continue
+            if chunk_spelling:
+                if chunk.isKindTypedText():
+                    word += chunk_spelling
+                    placeholder += chunk_spelling
+                    continue
+                elif chunk.isKindResultType():
+                    _type += chunk_spelling
+                else:
+                    placeholder += chunk_spelling
 
-            elif chunk.isKindResultType():
-                _type += chunk_spelling
-            else:
-                placeholder += chunk_spelling
+            if self.include_default_arguments:
+                def append_optional(c):
+                    if not c.isKindOptional():
+                        return ""
+                    optional_spelling = ""
+                    for optional_chunk in c.string:
+                        if optional_chunk.spelling:
+                            optional_spelling += optional_chunk.spelling
+                        optional_spelling += append_optional(optional_chunk)
+                    return optional_spelling
+                placeholder += append_optional(chunk)
 
         completion['word'] = word
         completion['abbr'] = completion['info'] = placeholder
