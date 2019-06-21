@@ -77,6 +77,15 @@ class Source(Base):
             'deoplete#sources#clang#include_default_arguments',
             False
         ))
+        filter_availability_kind_strs = vars.get(
+            'deoplete#sources#clang#filter_availability_kinds',
+            []
+        )
+        self.filter_availability_kinds = []
+        for availbility_kind_str in filter_availability_kind_strs:
+            for availability_kind in clang.availabilityKinds.values():
+                if availbility_kind_str == str(availability_kind):
+                    self.filter_availability_kinds.append(availability_kind)
 
         self.std_c = self.std.get('c', 'c11')
         self.std_cpp = self.std.get('cpp', 'c++1z')
@@ -168,16 +177,21 @@ class Source(Base):
         if complete is None:
             return []
 
+        if self.filter_availability_kinds:
+            def include(x):
+                return x.string.availability not in self.filter_availability_kinds
+            results = filter(include, complete.results)
+        else:
+            results = complete.results
+
         if self.sort_algo == 'priority':
             def get_priority(x):
                 return x.string.priority
-            results = sorted(complete.results, key=get_priority)
+            results = sorted(results, key=get_priority)
         elif self.sort_algo == 'alphabetical':
             def get_abbrevation(x):
                 return self.get_abbr(x.string).lower()
-            results = sorted(complete.results, key=get_abbrevation)
-        else:
-            results = complete.results
+            results = sorted(results, key=get_abbrevation)
 
         return list(map(self.parse_candidates, results))
 
