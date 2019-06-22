@@ -108,6 +108,7 @@ Plug 'zchee/deoplete-clang'
 `g:deoplete#sources#clang#sort_algo` | `''` | No
 `g:deoplete#sources#clang#clang_complete_database` | `''` | No
 `g:deoplete#sources#clang#include_default_arguments` | `False` | No
+`g:deoplete#sources#clang#filter_availability_kinds` | `[]` | No
 
 ### `g:deoplete#sources#clang#libclang_path`
 
@@ -290,6 +291,31 @@ I'm planning the rewrite the parser in Go for faster parsing in the future.
 | **Example** | `True` or `False` |
 
 Include default arguments in function signatures.
+
+### `g:deoplete#sources#clang#filter_availability_kinds`
+
+|||
+|---|---|
+| **Required** | No |
+| **Type** | list |
+| **Default** | `[]` |
+| **Example** | `['NotAvailable', 'NotAccessible']` |
+
+Filter candidates to exclude the listed availability kinds. An empty list will
+does not perform any filtering.
+
+Availability kind strings include:
+
+| String | Description |
+|---|---|
+| 'Available' | The entity is available |
+| 'Deprecated' | The entity is available, but has been deprecated |
+| 'NotAvailable' | The entity is not available, any use of it will be an error |
+| 'NotAccessible' | The entity is available, but not accessible, any use of it will be an error |
+
+For example, using 'NotAccessible' would result in private class members being
+filtered out from the candidates when they are not accessible from the given
+context.
 
 ## Project-specific settings
 
