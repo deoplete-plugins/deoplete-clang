@@ -1,7 +1,7 @@
 import os
 import re
 
-from .base import Base
+from deoplete.base.source import Base
 from deoplete.util import load_external_module
 
 current = __file__
